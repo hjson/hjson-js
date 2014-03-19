@@ -35,6 +35,7 @@ npm install hjson
 ```
 var HJSON = require('hjson');
 
-var obj = HJSON.parse(text);
-```
+var obj = HJSON.parse(hjsonText);
+var text2 = HJSON.stringify(obj);
 
+```
