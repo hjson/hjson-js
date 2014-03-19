@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+var HJSON = require('../lib/hjson.js');
+var fs = require('fs');
+
+var args={}, argv=[];
+process.argv.slice(2).forEach(function(x) { if (x[0]==="-") { var i=x.indexOf("="); args[x.substr(1, i>0?i-1:undefined)]=i>0?x.substr(i+1):true; } else argv.push(x); });
+
+if (args["-help"] || args["-?"] || args["?"] || args.h)
+{
+  console.error("usage: hjson [-json] [INPUT]");
+  console.error();
+  console.error("  hjson can be used to convert JSON from/to HJSON.");
+  console.error();
+  console.error("  hjson will read the given JSON/HJSON input file or read from stdin.");
+  console.error("  - without options: will output as HJSON.");
+  console.error("  - with -json: will output as formatted JSON.");
+  console.error("  - with -json=compact: will output as JSON.");
+  return 0;
+}
+
+if (argv.length)
+{
+  var text=fs.readFileSync(argv[0], "utf8");
+  convert(text);
+}
+else
+{
+  var stdin = process.openStdin();
+  stdin.setEncoding('utf-8');
+  var text = '';
+  stdin.on('data', function(chunk) { text += chunk; });
+  stdin.on('end', function() { convert(text); });
+}
+
+function convert(text)
+{
+  var obj;
+  try { obj=HJSON.parse(text); }
+  catch (e) { console.error(e.toString()); return; }
+
+  var result;
+  if (args.json==="compact") result=JSON.stringify(obj);
+  else if (args.json) result=JSON.stringify(obj, null, 2);
+  else result=HJSON.stringify(obj);
+
+  process.stdout.write(result);
+}

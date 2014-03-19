@@ -12,6 +12,9 @@
     "json",
     "hjson"
   ],
+  "bin": {
+    "hjson": "./bin/hjson"
+  },
   "homepage": "http://laktak.github.io/hjson",
   "repository":
   {
