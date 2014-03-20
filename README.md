@@ -2,7 +2,9 @@
 
 HJSON reference parser implementation.
 
-HJSON is JSON for humans.
+HJSON is JSON - commas + comments.
+
+It should be used for configuration files, for debug output or where it is likely that JSON data is read or will be edited by a human.
 
 That means that you can write:
 ```
