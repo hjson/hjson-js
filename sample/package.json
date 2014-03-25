@@ -1,0 +1,9 @@
+{
+  "name": "sample",
+  "version": "0.0.1",
+  "private": true,
+  "author": "laktak",
+  "dependencies": {
+    "hjson": "~0.1.1"
+  }
+}

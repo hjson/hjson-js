@@ -1,8 +1,8 @@
 # hjson-js
 
-HJSON reference parser implementation.
+Hjson reference implementation.
 
-HJSON is JSON - commas + comments.
+Hjson is JSON - commas + comments for Humans.
 
 It should be used for configuration files, for debug output or where it is likely that JSON data is read or will be edited by a human.
 
@@ -11,7 +11,7 @@ That means that you can write:
 {
   # look, no quotes or commas!
   foo: Hello World!
-  bar: Hello HJSON!
+  bar: Hello Hjson!
 }
 ```
 
@@ -19,7 +19,7 @@ instead of:
 ```
 {
   "foo": "Hello World!",
-  "bar": "Hello HJSON!"
+  "bar": "Hello Hjson!"
 }
 ```
 
@@ -35,10 +35,10 @@ npm install hjson
 # Usage
 
 ```
-var HJSON = require('hjson');
+var Hjson = require('hjson');
 
-var obj = HJSON.parse(hjsonText);
-var text2 = HJSON.stringify(obj);
+var obj = Hjson.parse(hjsonText);
+var text2 = Hjson.stringify(obj);
 
 ```
 
@@ -49,14 +49,14 @@ Install with `npm install hjson -g`.
 ```
 usage: hjson [-json] [INPUT]
 
-  hjson can be used to convert JSON from/to HJSON.
+  hjson can be used to convert JSON from/to Hjson.
 
-  hjson will read the given JSON/HJSON input file or read from stdin.
-  - without options: will output as HJSON.
+  hjson will read the given JSON/Hjson input file or read from stdin.
+  - without options: will output as Hjson.
   - with -json: will output as formatted JSON.
   - with -json=compact: will output as JSON.
 ```
 
 Sample:
-- run `hjson test.json > test.hjson` to convert to HJSON
+- run `hjson test.json > test.hjson` to convert to Hjson
 - run `hjson -json test.hjson > test.json` to convert to JSON

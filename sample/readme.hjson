@@ -1,0 +1,31 @@
+{
+  # comments are treated like whitespace - they are not parsed
+
+  hello:       Hello Human!
+
+  # text
+  text:        This is a valid string value.
+  quote:       "You need quotes\nfor escapes"
+  otherwise:   a \ is just a \
+
+  # keys
+  abc123:      no quotes for keys that contain only a-z, A-Z and 0-9
+  "a/b.c ":    a key with any other characters still needs quotes
+
+  # comma
+  commas:      "can be omitted at the end of the line"
+  but:         [ 1, 2, 3 ] # not between elements on the same line
+  trailing:    [ 1, 2, 3, ] # a trailing comma is OK
+
+  # numbers, keywords and arrays work just like in JSON
+  number:      5
+  negative:    -4.2
+  yes:         true
+  no:          false
+  null:        null
+  array:       [ 1, 2 ]
+  array2:      [
+    1
+    2
+  ]
+}

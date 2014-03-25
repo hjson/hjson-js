@@ -1,9 +1,9 @@
 {
   "name": "hjson",
-  "description": "JSON for Humans",
+  "description": "JSON - commas + comments for Humans",
   "main": "./lib/hjson.js",
   "author": "Christian Zangl",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "tags": [
     "json",
     "hjson"
