@@ -47,16 +47,16 @@ var text2 = Hjson.stringify(obj);
 Install with `npm install hjson -g`.
 
 ```
-usage: hjson [-json] [INPUT]
+usage: hjson [OPTIONS] [INPUT]
 
   hjson can be used to convert JSON from/to Hjson.
 
   hjson will read the given JSON/Hjson input file or read from stdin.
   - without options: will output as Hjson.
-  - with -json: will output as formatted JSON.
-  - with -json=compact: will output as JSON.
+  - with -j or -json: will output as formatted JSON.
+  - with -c or -json=compact: will output as JSON.
 ```
 
 Sample:
 - run `hjson test.json > test.hjson` to convert to Hjson
-- run `hjson -json test.hjson > test.json` to convert to JSON
+- run `hjson -j test.hjson > test.json` to convert to JSON
