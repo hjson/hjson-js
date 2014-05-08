@@ -5,7 +5,7 @@
 
   # text
   text:        This is a valid string value.
-  quote:       "You need quotes\nfor escapes"
+  quote:       "You need quotes\tfor escapes"
   otherwise:   a \ is just a \
 
   # keys
@@ -16,6 +16,15 @@
   commas:      "can be omitted at the end of the line"
   but:         [ 1, 2, 3 ] # not between elements on the same line
   trailing:    [ 1, 2, 3, ] # a trailing comma is OK
+
+  # multiline string
+  multiline:
+    '''
+    this
+    is
+    a
+    test
+    '''
 
   # numbers, keywords and arrays work just like in JSON
   number:      5
