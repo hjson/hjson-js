@@ -20,10 +20,9 @@
   # multiline string
   multiline:
     '''
-    this
-    is
-    a
-    test
+    first line
+      indented line
+    third line
     '''
 
   # numbers, keywords and arrays work just like in JSON
