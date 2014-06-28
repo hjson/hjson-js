@@ -3,7 +3,7 @@
   "description": "JSON - commas + comments for Humans (use for configuration/debugging)",
   "main": "./lib/hjson.js",
   "author": "Christian Zangl",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "tags": [
     "json",
     "hjson"
