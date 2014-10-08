@@ -1,38 +1,8 @@
 # hjson-js
 
-Hjson JavaScript reference implementation.
+Hjson, the Human JSON. A data format that caters to humans and helps reduce the errors they make.
 
-Hjson is JSON - commas + comments for Humans.
-
-It should be used for configuration files, for debug output or where it is likely that JSON data is read or will be edited by a human.
-
-That means that you can write:
-```
-{
-  # look, no quotes or commas!
-  foo: Hello World!
-  bar: Hello Hjson!
-
-  # don't bother with escapes
-  html: <div class="hello">world</div>
-
-  # Hjson is a superset so the normal JSON syntax can be used
-  "array": [ 1, "two" ]
-}
-```
-
-instead of:
-```
-{
-  "foo": "Hello World!",
-  "bar": "Hello Hjson!",
-  "html": "<div class=\"hello\">world</div>",
-  "array": [ 1, "two" ]
-}
-```
-
-For details see http://laktak.github.io/hjson.
-
+For details and syntax see http://laktak.github.io/hjson.
 
 # Install from npm
 
