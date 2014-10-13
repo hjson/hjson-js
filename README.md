@@ -77,6 +77,10 @@ console.log(Hjson.stringify(data, { keepWsc: true }));
 
 # Changes
 
+## v1.0.2
+
+- stringify bug fixes
+
 ## v1.0.0
 
 - Switched to v1 for semver

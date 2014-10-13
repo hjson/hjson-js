@@ -3,12 +3,14 @@
   "description": "JSON - commas + comments for Humans (use for configuration/debugging)",
   "main": "./lib/hjson.js",
   "author": "Christian Zangl",
-  "version": "1.0.1",
-  "tags": [
+  "version": "1.0.2",
+  "tags":
+  [
     "json",
     "hjson"
   ],
-  "keywords": [
+  "keywords":
+  [
     "json",
     "config",
     "comments",
@@ -16,8 +18,13 @@
     "parser",
     "serializer"
   ],
-  "bin": {
+  "bin":
+  {
     "hjson": "./bin/hjson"
+  },
+  "scripts":
+  {
+    "test" : "node ./test/test.js"
   },
   "homepage": "http://laktak.github.io/hjson",
   "repository":
