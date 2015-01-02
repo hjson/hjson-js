@@ -2,7 +2,7 @@
 
 Hjson, the Human JSON. A data format that caters to humans and helps reduce the errors they make.
 
-For details and syntax see http://laktak.github.io/hjson.
+It supports `#` and `//` style comments as well as avoiding trailing comma and other mistakes. For details and syntax see http://laktak.github.io/hjson.
 
 # Install from npm
 
