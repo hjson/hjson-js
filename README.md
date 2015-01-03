@@ -2,7 +2,7 @@
 
 Hjson, the Human JSON. A data format that caters to humans and helps reduce the errors they make.
 
-It supports `#` and `//` style comments as well as avoiding trailing comma and other mistakes. For details and syntax see http://laktak.github.io/hjson.
+It supports `#`, `//` and `/**/` style comments as well as avoiding trailing/missing comma and other mistakes. For details and syntax see http://laktak.github.io/hjson.
 
 # Install from npm
 
@@ -43,9 +43,26 @@ Sample:
 
 # API
 
-See hjson.js
+Also see lib/hjson.js
 
-# Editing Hjson
+## Hjson.parse(text, options)
+
+This method parses *JSON* or *Hjson* text to produce an object or array.
+
+- *text*: the string to parse as JSON or Hjson
+- *options*: object
+  - *keepWsc*: boolean, keep white space and comments. This is useful if you want to edit an hjson file and save it while preserving comments (default false)
+
+## Hjson.stringify(value, options)
+
+This method produces Hjson text from a JavaScript value.
+
+- *value*: any JavaScript value, usually an object or array.
+- *options*: object
+  - *keepWsc*: boolean, keep white space. See parse.
+  - *space*: an optional parameter that specifies the indentation of nested structures. If it is a number, it will specify the number of spaces to indent at each level. If it is a string (such as '\t' or '&nbsp;'), it contains the characters used to indent at each level.
+
+## modify & keep comments
 
 You can modify a Hjson file and keep the whitespace & comments intact. This is useful if an app updates its config file.
 
@@ -76,6 +93,15 @@ console.log(Hjson.stringify(data, { keepWsc: true }));
 ```
 
 # Changes
+
+## v1.2.0
+
+- add old fashioned /**/ comments
+- fix cli eol
+
+## v1.1.0
+
+- add // support
 
 ## v1.0.2
 

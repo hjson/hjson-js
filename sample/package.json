@@ -1,9 +1,6 @@
 {
-  "name": "sample",
-  "version": "0.0.1",
   "private": true,
-  "author": "laktak",
   "dependencies": {
-    "hjson": ">=0.2.2"
+    "hjson": "^1.2.0"
   }
 }

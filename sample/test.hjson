@@ -3,6 +3,13 @@
 
   hello:       Hello Human!
 
+  // js style comment
+
+  /*
+  multiline comment
+  multiline comment
+  */
+
   # text
   text:        This is a valid string value.
   quote:       "You need quotes\tfor escapes"
