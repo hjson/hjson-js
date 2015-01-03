@@ -43,5 +43,5 @@ function convert(text) {
   else if (args.j || args.json) result = JSON.stringify(obj, null, 2);
   else result = Hjson.stringify(obj);
 
-  process.stdout.write(result);
+  process.stdout.write(result + os.EOL);
 }
