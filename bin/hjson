@@ -9,8 +9,7 @@ Hjson.setEndOfLine(os.EOL);
 var args={}, argv=[];
 process.argv.slice(2).forEach(function(x) { if (x[0]==="-") { var i=x.indexOf("="); args[x.substr(1, i>0?i-1:undefined)]=i>0?x.substr(i+1):true; } else argv.push(x); });
 
-if (args["-help"] || args["-?"] || args["?"] || args.h)
-{
+if (args["-help"] || args["-?"] || args["?"] || args.h) {
   console.error("usage: hjson [OPTIONS] [INPUT]");
   console.error();
   console.error("  hjson can be used to convert JSON from/to Hjson.");
@@ -22,13 +21,11 @@ if (args["-help"] || args["-?"] || args["?"] || args.h)
   return 0;
 }
 
-if (argv.length)
-{
+if (argv.length) {
   var text=fs.readFileSync(argv[0], "utf8");
   convert(text);
 }
-else
-{
+else {
   var stdin = process.openStdin();
   stdin.setEncoding('utf-8');
   var text = '';
@@ -36,16 +33,15 @@ else
   stdin.on('end', function() { convert(text); });
 }
 
-function convert(text)
-{
+function convert(text) {
   var obj;
   try { obj=Hjson.parse(text); }
   catch (e) { console.error(e.toString()); return; }
 
   var result;
-  if (args.c || args.json==="compact") result=JSON.stringify(obj);
-  else if (args.j || args.json) result=JSON.stringify(obj, null, 2);
-  else result=Hjson.stringify(obj);
+  if (args.c || args.json==="compact") result = JSON.stringify(obj);
+  else if (args.j || args.json) result = JSON.stringify(obj, null, 2);
+  else result = Hjson.stringify(obj);
 
   process.stdout.write(result);
 }
