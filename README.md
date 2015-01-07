@@ -97,6 +97,10 @@ console.log(Hjson.stringify(data, { keepWsc: true }));
 
 # Changes
 
+## v1.3.0
+
+- add support for simplified syntax
+
 ## v1.2.0
 
 - add old fashioned /**/ comments
