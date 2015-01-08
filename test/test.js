@@ -2,7 +2,7 @@
 var Hjson = require("..");
 var fs = require("fs");
 var path = require("path");
-var rootDir = path.normalize(path.join(__dirname, "asset"));
+var rootDir = path.normalize(path.join(__dirname, "assets"));
 
 Hjson.setEndOfLine("\n");
 
