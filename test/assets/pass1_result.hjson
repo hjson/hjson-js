@@ -1,6 +1,5 @@
 [
   JSON Test Pattern pass1
-  
   {
     "object with 1 member":
     [
@@ -13,7 +12,6 @@
   true
   false
   null
-  
   {
     integer: 1234567890
     real: -9876.54321

@@ -35,14 +35,14 @@ fs.readdirSync(rootDir).forEach(function(file) {
 
   try {
     var data = Hjson.parse(text);
-    var data1 = JSON.stringify(data, null, 2);
+    var text1 = JSON.stringify(data, null, 2);
     var hjson1 = Hjson.stringify(data);
 
     if (!shouldFail) {
       var result = JSON.parse(fs.readFileSync(path.join(rootDir, name+"_result.json"), "utf8"));
-      var data2 = JSON.stringify(result, null, 2);
+      var text2 = JSON.stringify(result, null, 2);
       var hjson2 = fs.readFileSync(path.join(rootDir, name+"_result.hjson"), "utf8");
-      if (data1 !== data2) failErr(name, "parse", data1, data2);
+      if (text1 !== text2) failErr(name, "parse", text1, text2);
       if (hjson1 !== hjson2) failErr(name, "stringify", hjson1, hjson2);
       if (isJson) {
         var json1 = JSON.stringify(data), json2 = JSON.stringify(JSON.parse(text));
