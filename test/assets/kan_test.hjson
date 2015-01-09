@@ -2,6 +2,9 @@
   # the comma forces a whitespace check
   numbers:
   [
+    0
+    0   ,
+    -0
     42  ,
     42.1  ,
     -5
@@ -23,6 +26,8 @@
   strings:
   [
     x 0
+    00
+    01
     0 0 0
     42 x
     42.1 asdf

@@ -46,9 +46,9 @@ Sample:
 
 # API
 
-Also see lib/hjson.js
+The API is the same for the browser and node version.
 
-## Hjson.parse(text, options)
+### Hjson.parse(text, options)
 
 This method parses *JSON* or *Hjson* text to produce an object or array.
 
@@ -56,7 +56,7 @@ This method parses *JSON* or *Hjson* text to produce an object or array.
 - *options*: object
   - *keepWsc*: boolean, keep white space and comments. This is useful if you want to edit an hjson file and save it while preserving comments (default false)
 
-## Hjson.stringify(value, options)
+### Hjson.stringify(value, options)
 
 This method produces Hjson text from a JavaScript value.
 
@@ -64,6 +64,14 @@ This method produces Hjson text from a JavaScript value.
 - *options*: object
   - *keepWsc*: boolean, keep white space. See parse.
   - *space*: an optional parameter that specifies the indentation of nested structures. If it is a number, it will specify the number of spaces to indent at each level. If it is a string (such as '\t' or '&nbsp;'), it contains the characters used to indent at each level.
+
+### Hjson.endOfLine(), .setEndOfLine(eol)
+
+Gets or sets the EOL character ('\n' or '\r\n').
+
+### Hjson.bracesSameLine(), .setBracesSameLine(b)
+
+Gets or sets if braces should appear on the same line (for stringify).
 
 ## modify & keep comments
 
@@ -97,29 +105,33 @@ console.log(Hjson.stringify(data, { keepWsc: true }));
 
 # Changes
 
-## v1.3.0
+- v1.4.0
 
-- add support for simplified syntax
+  Changed the browser interface to match the node api (which didn't change).
+  Fixed parse for leading zeros ("00").
+  Fixed stringify for /**/ and //
+  Added more test cases.
 
-## v1.2.0
+- v1.3.0
 
-- add old fashioned /**/ comments
-- fix cli eol
+  Added support for the simplified syntax.
 
-## v1.1.0
+- v1.2.0
 
-- add // support
+  Added old fashioned /**/ comments.
+  Fixed the missing EOL (cli only).
 
-## v1.0.2
+- v1.1.0
 
-- stringify bug fixes
+  add // support
 
-## v1.0.0
+- v1.0.2
 
-- Switched to v1 for semver
+  stringify bug fixes
 
-- Adds editing support via the `{ keepWsc: true }` option.
+- v1.0.0
 
-- Removes stringify(value, replacer, space) replacer support
-
+  Switched to v1 for semver
+  Adds editing support via the `{ keepWsc: true }` option.
+  Removes stringify(value, replacer, space) replacer support
   You can still use this syntax but replacer will no longer be called. This was removed in favor of editing support and because replacer provided an incomplete solution.

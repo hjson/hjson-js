@@ -9,4 +9,8 @@
 
   /* js block style comments */foobar1:/* more */This is a string value./* not a comment */
   /* js block style comments */foobar2:/* more */"This is a string value."/* a comment */
+
+  rem1: "# test"
+  rem2: "// test"
+  rem3: "/* test */"
 }
