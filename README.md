@@ -108,8 +108,11 @@ console.log(Hjson.stringify(data, { keepWsc: true }));
 - v1.4.0
 
   Changed the browser interface to match the node api (which didn't change).
-  Fixed parse for leading zeros ("00").
+
+  Fixed parse for leading zeros ("00") and trailing comments.
+
   Fixed stringify for /**/ and //
+
   Added more test cases.
 
 - v1.3.0
@@ -119,6 +122,7 @@ console.log(Hjson.stringify(data, { keepWsc: true }));
 - v1.2.0
 
   Added old fashioned /**/ comments.
+
   Fixed the missing EOL (cli only).
 
 - v1.1.0
@@ -131,7 +135,10 @@ console.log(Hjson.stringify(data, { keepWsc: true }));
 
 - v1.0.0
 
-  Switched to v1 for semver
+  Switched to v1 for semver.
+
   Adds editing support via the `{ keepWsc: true }` option.
+
   Removes stringify(value, replacer, space) replacer support
+
   You can still use this syntax but replacer will no longer be called. This was removed in favor of editing support and because replacer provided an incomplete solution.

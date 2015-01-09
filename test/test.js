@@ -31,7 +31,6 @@ fs.readdirSync(rootDir).forEach(function(file) {
   if (filter && name.indexOf(filter) < 0) return; // ignore
 
   var text = fs.readFileSync(path.join(rootDir, file), "utf8");
-  var failed = false;
   var shouldFail = name.substr(0, 4) === "fail";
 
   try {
@@ -46,7 +45,8 @@ fs.readdirSync(rootDir).forEach(function(file) {
       if (data1 !== data2) failErr(name, "parse", data1, data2);
       if (hjson1 !== hjson2) failErr(name, "stringify", hjson1, hjson2);
       if (isJson) {
-        if (JSON.stringify(data) !== JSON.stringify(JSON.parse(text))) failErr(name, "json chk", hjson1, hjson2);
+        var json1 = JSON.stringify(data), json2 = JSON.stringify(JSON.parse(text));
+        if (json1 !== json2) failErr(name, "json chk", json1, json2);
       }
     }
     else failErr(name, "should fail");
