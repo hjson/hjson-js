@@ -7,18 +7,22 @@
     '''
     first line
       indented line
+        indented line
     third line
     '''
   multiline2:
     '''
     first line
       indented line
-    third line'''
+    third line
+
+    '''
   multiline3:
     '''
     first line
       indented line
-    third line'''
+    third line
+    '''
   foo1a: asdf\"'a\s\w
   foo1b: asdf\"'a\s\w
   foo1c: asdf\"'a\s\w

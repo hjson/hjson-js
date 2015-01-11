@@ -14,6 +14,7 @@
     '''
     first line
       indented line
+        indented line
     third line
     '''
 
@@ -21,7 +22,9 @@
     '''
     first line
       indented line
-    third line''' # no trailing lf
+    third line
+
+    ''' # trailing lf
 
   multiline3:
     '''first line
