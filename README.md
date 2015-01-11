@@ -46,7 +46,7 @@ Sample:
 
 # API
 
-The API is the same for the browser and node version.
+The API is the same for the browser and node.js version.
 
 ### Hjson.parse(text, options)
 
