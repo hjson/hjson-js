@@ -7,8 +7,6 @@ var rootDir = path.normalize(path.join(__dirname, "assets"));
 var argv=process.argv.slice(2)
 var filter=argv[0];
 
-Hjson.setEndOfLine("\n");
-
 function failErr(name, type, s1, s2) {
   console.log(name+" "+type+" FAILED!");
   if (s1 || s2) {
@@ -20,31 +18,30 @@ function failErr(name, type, s1, s2) {
   process.exit(1);
 }
 
-console.log("running tests...");
-
-fs.readdirSync(rootDir).forEach(function(file) {
-  var name = file.split("_test.");
-  if (name.length < 2) return;
-  var isJson = name[2] === "json";
-  name = name[0];
-
-  if (filter && name.indexOf(filter) < 0) return; // ignore
-
+function load(file, cr) {
   var text = fs.readFileSync(path.join(rootDir, file), "utf8");
+  var std = text.replace(/\r/g, ""); // make sure we have unix style text regardless of the input
+  return cr ? std.replace(/\n/g, "\r\n") : std;
+}
+
+function test(name, file, isJson, inputCr, outputCr) {
+  var text = load(file, inputCr);
   var shouldFail = name.substr(0, 4) === "fail";
+  Hjson.setEndOfLine(outputCr?"\r\n":"\n");
 
   try {
     var data = Hjson.parse(text);
-    var text1 = JSON.stringify(data, null, 2);
-    var hjson1 = Hjson.stringify(data);
 
     if (!shouldFail) {
-      var result = JSON.parse(fs.readFileSync(path.join(rootDir, name+"_result.json"), "utf8"));
+      var text1 = JSON.stringify(data, null, 2);
+      var hjson1 = Hjson.stringify(data);
+      var result = JSON.parse(load(name+"_result.json", inputCr));
       var text2 = JSON.stringify(result, null, 2);
-      var hjson2 = fs.readFileSync(path.join(rootDir, name+"_result.hjson"), "utf8");
+      var hjson2 = load(name+"_result.hjson", outputCr);
       if (text1 !== text2) failErr(name, "parse", text1, text2);
       if (hjson1 !== hjson2) failErr(name, "stringify", hjson1, hjson2);
       if (isJson) {
+        // also compare Hjson.parse to JSON.parse
         var json1 = JSON.stringify(data), json2 = JSON.stringify(JSON.parse(text));
         if (json1 !== json2) failErr(name, "json chk", json1, json2);
       }
@@ -54,6 +51,22 @@ fs.readdirSync(rootDir).forEach(function(file) {
   catch (err) {
     if (!shouldFail) failErr(name, "exception", err.toString(), "");
   }
+}
+
+console.log("running tests...");
+
+fs.readdirSync(rootDir).forEach(function(file) {
+  var name = file.split("_test.");
+  if (name.length < 2) return;
+  var isJson = name[2] === "json";
+  name = name[0];
+
+  if (filter && name.indexOf(filter) < 0) return; // ignore
+  test(name, file, isJson, false, false);
+  test(name, file, isJson, false, true);
+  test(name, file, isJson, true, false);
+  test(name, file, isJson, true, true);
+
   console.log("- "+name+" OK");
 });
 

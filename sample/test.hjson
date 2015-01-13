@@ -13,11 +13,10 @@
   # text
   text:        This is a valid string value.
   quote:       "You need quotes\tfor escapes"
-  otherwise:   a \ is just a \
+  otherwise:   <div class="cool">life without escapes is bliss!</div>
 
   # keys
-  abc123:      no quotes for keys that contain only a-z, A-Z and 0-9
-  "a/b.c ":    a key with any other characters still needs quotes
+  abc-123:      no quotes for keys
 
   # comma
   commas:      "can be omitted at the end of the line"
