@@ -26,7 +26,7 @@
   "pre-push": [
     "npm test"
   ],
-  "homepage": "http://laktak.github.io/hjson",
+  "homepage": "http://hjson.org",
   "repository": {
     "type": "git",
     "url": "https://github.com/laktak/hjson-js.git"
