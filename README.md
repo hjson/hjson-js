@@ -3,7 +3,7 @@
 [![Build Status](https://img.shields.io/travis/laktak/hjson-js.svg?style=flat-square)](http://travis-ci.org/laktak/hjson-js)
 [![NPM version](https://img.shields.io/npm/v/hjson.svg?style=flat-square)](http://www.npmjs.com/package/hjson)
 
-Hjson, the Human JSON. A configuration file format that caters to humans and helps reduce the errors they make.
+[Hjson](http://hjson.org), the Human JSON. A configuration file format that caters to humans and helps reduce the errors they make.
 
 It supports `#`, `//` and `/**/` style comments as well as avoiding trailing/missing comma and other mistakes. For details and syntax see [hjson.org](http://hjson.org).
 
@@ -73,14 +73,18 @@ Gets or sets the EOL character ('\n' or '\r\n').
 
 Gets or sets if braces should appear on the same line (for stringify).
 
+### Hjson.rt { parse, stringify }
+
+This is a shortcut to roundtrip your comments when reading and updating a config file. It is the same as specifying the keepWsc option for the parse and stringify functions.
+
 ## modify & keep comments
 
-You can modify a Hjson file and keep the whitespace & comments intact. This is useful if an app updates its config file.
+You can modify a Hjson file and keep the whitespace & comments intact (round trip). This is useful if an app updates its config file.
 
 ```
 // parse, keep whitespace and comments
 // (they are stored in a non enumerable __WSC__ member)
-var data = Hjson.parse(text, { keepWsc: true });
+var data = Hjson.rt.parse(text);
 
 // modify like you normally would
 data.foo = "text";
@@ -100,10 +104,13 @@ data.arrayWithComments = [ "a" ];
 data.arrayWithComments.__WSC__ = [ "before a", "after a" ];
 
 // convert back to Hjson
-console.log(Hjson.stringify(data, { keepWsc: true }));
+console.log(Hjson.rt.stringify(data));
 ```
 
 # Changes
+
+- v1.6.0
+  - Added `rt` (roundtrip) shortcut.
 
 - v1.5.0
   - Added support for the simplified syntax for keys. Previously only alphanumeric keys were allowed without quotes.

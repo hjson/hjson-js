@@ -3,7 +3,7 @@
   "description": "JSON for Humans, allows comments and is less error prone.",
   "main": "./lib/hjson.js",
   "author": "Christian Zangl",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "tags": [
     "json",
     "hjson"
@@ -23,9 +23,6 @@
     "test": "node ./test/test.js",
     "lint": "jshint bin/hjson lib"
   },
-  "pre-push": [
-    "npm test"
-  ],
   "homepage": "http://hjson.org",
   "repository": {
     "type": "git",
