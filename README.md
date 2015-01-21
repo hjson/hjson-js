@@ -5,7 +5,32 @@
 
 [Hjson](http://hjson.org), the Human JSON. A configuration file format that caters to humans and helps reduce the errors they make.
 
-It supports `#`, `//` and `/**/` style comments as well as avoiding trailing/missing comma and other mistakes. For details and syntax see [hjson.org](http://hjson.org).
+```
+{
+  # This is Hjson
+
+  /*
+
+  Why?
+
+  JSON is a great tool that does its job very well. Maybe too well. JSON is a
+  great hammer but not everything is a nail.
+
+  Configuration files are edited by end-users, not developers. Users should not
+  have to worry about putting commas in the correct place. Software should
+  empower the user not hinder him.
+
+  */
+
+  "JSON": "is Hjson",
+
+  but: commas and quotes are optional!
+  and: those are allowed: // /**/ #
+  so:  less mistakes, more comments ;-)
+}
+```
+
+For details see [hjson.org](http://hjson.org).
 
 # Install from npm
 
