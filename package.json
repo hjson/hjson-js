@@ -4,17 +4,14 @@
   "main": "./lib/hjson.js",
   "author": "Christian Zangl",
   "version": "1.6.1",
-  "tags": [
-    "json",
-    "hjson"
-  ],
   "keywords": [
     "json",
     "comments",
     "config",
     "hjson",
     "parser",
-    "serializer"
+    "serializer",
+    "human"
   ],
   "bin": {
     "hjson": "./bin/hjson"
