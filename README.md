@@ -88,15 +88,15 @@ This method produces Hjson text from a JavaScript value.
 - *value*: any JavaScript value, usually an object or array.
 - *options*: object
   - *keepWsc*: boolean, keep white space. See parse.
-  - *space*: an optional parameter that specifies the indentation of nested structures. If it is a number, it will specify the number of spaces to indent at each level. If it is a string (such as '\t' or '&nbsp;'), it contains the characters used to indent at each level.
+  - *bracesSameLine*: boolean, makes braces appear on the same line as the key name. Default false.
+  - *quotes*: string, controls how strings are displayed.
+    - "min": no quotes whenever possible (default)
+    - "always": always use quotes
+  - *space*: specifies the indentation of nested structures. If it is a number, it will specify the number of spaces to indent at each level. If it is a string (such as '\t' or '&nbsp;'), it contains the characters used to indent at each level.
 
 ### Hjson.endOfLine(), .setEndOfLine(eol)
 
 Gets or sets the EOL character ('\n' or '\r\n').
-
-### Hjson.bracesSameLine(), .setBracesSameLine(b)
-
-Gets or sets if braces should appear on the same line (for stringify).
 
 ### Hjson.rt { parse, stringify }
 
