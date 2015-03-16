@@ -93,10 +93,11 @@ This method produces Hjson text from a JavaScript value.
     - "min": no quotes whenever possible (default)
     - "always": always use quotes
   - *space*: specifies the indentation of nested structures. If it is a number, it will specify the number of spaces to indent at each level. If it is a string (such as '\t' or '&nbsp;'), it contains the characters used to indent at each level.
+  - *eol*: specifies the EOL sequence (default is set by Hjson.setEndOfLine())
 
 ### Hjson.endOfLine(), .setEndOfLine(eol)
 
-Gets or sets the EOL character ('\n' or '\r\n').
+Gets or sets the stringify EOL sequence ('\n' or '\r\n'). When running with node.js this defaults to os.EOL.
 
 ### Hjson.rt { parse, stringify }
 
@@ -134,6 +135,8 @@ console.log(Hjson.rt.stringify(data));
 
 # Changes
 
+- v1.6.3
+  - added stringify options
 - v1.6.1
   - fixed stringify with options===null
 - v1.6.0
