@@ -7,30 +7,24 @@
 
 ```
 {
-  # This is Hjson
+  # specify rate in requests/second (because comments are helpful!)
+  rate: 1000
 
-  /*
+  // prefer c-style comments?
+  /* feeling old fashioned? */
 
-  Why?
+  # did you notice that rate doesn't need quotes?
+  hey: look ma, no quotes for strings either!
 
-  JSON is a great tool that does its job very well. Maybe too well. JSON is a
-  great hammer but not everything is a nail.
+  # best of all
+  notice: []
+  anything: ?
 
-  Configuration files are edited by end-users, not developers. Users should not
-  have to worry about putting commas in the correct place. Software should
-  empower the user not hinder him.
-
-  */
-
-  "JSON": "is Hjson",
-
-  but: commas and quotes are optional!
-  and: those are allowed: // /**/ #
-  so:  less mistakes, more comments ;-)
+  # yes, commas are optional!
 }
 ```
 
-For details see [hjson.org](http://hjson.org).
+The JavaScript implementation of Hjson is based on [JSON-js](https://github.com/douglascrockford/JSON-js). For other platforms see [hjson.org](http://hjson.org).
 
 # Install from npm
 
