@@ -15,7 +15,10 @@ if (args["-help"] || args["-?"] || args["?"] || args.h) {
   console.error("  hjson can be used to convert JSON from/to Hjson.");
   console.error();
   console.error("  hjson will read the given JSON/Hjson input file or read from stdin.");
-  console.error("  - without options: will output as Hjson.");
+  console.error("  - default: will output as Hjson.");
+  console.error("    - with -sl: will output the opening brace on the same line.");
+  console.error("    - with -root: will output braces for the root object.");
+  console.error("    - with -quote: will quote all strings.");
   console.error("  - with -j or -json: will output as formatted JSON.");
   console.error("  - with -c or -json=compact: will output as JSON.");
   return 0;
@@ -41,7 +44,7 @@ function convert(text) {
   var result;
   if (args.c || args.json==="compact") result = JSON.stringify(obj);
   else if (args.j || args.json) result = JSON.stringify(obj, null, 2);
-  else result = Hjson.stringify(obj);
+  else result = Hjson.stringify(obj, { emitRootBraces: args.root, bracesSameLine: args.sl, quotes: args.quote?"always":"min" });
 
   process.stdout.write(result + os.EOL);
 }
