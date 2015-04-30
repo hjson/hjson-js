@@ -2,6 +2,7 @@
 
 [![Build Status](https://img.shields.io/travis/laktak/hjson-js.svg?style=flat-square)](http://travis-ci.org/laktak/hjson-js)
 [![NPM version](https://img.shields.io/npm/v/hjson.svg?style=flat-square)](http://www.npmjs.com/package/hjson)
+[![License](https://img.shields.io/github/license/laktak/hjson-js.svg?style=flat-square)](https://github.com/laktak/hjson-js/blob/master/LICENSE)
 
 [Hjson](http://hjson.org), the Human JSON. A configuration file format that caters to humans and helps reduce the errors they make.
 
@@ -53,7 +54,10 @@ usage: hjson [OPTIONS] [INPUT]
   hjson can be used to convert JSON from/to Hjson.
 
   hjson will read the given JSON/Hjson input file or read from stdin.
-  - without options: will output as Hjson.
+  - default: will output as Hjson.
+    - with -sl: will output the opening brace on the same line.
+    - with -root: will output braces for the root object.
+    - with -quote: will quote all strings.
   - with -j or -json: will output as formatted JSON.
   - with -c or -json=compact: will output as JSON.
 ```
