@@ -1,0 +1,33 @@
+# hjson-js History
+
+- v1.7.2
+  - fixed stringify, see laktak/hjson#29
+  - optional root braces, see laktak/hjson#28
+- v1.6.3
+  - added stringify options
+- v1.6.1
+  - fixed stringify with options===null
+- v1.6.0
+  - Added `rt` (roundtrip) shortcut.
+- v1.5.0
+  - Added support for the simplified syntax for keys. Previously only alphanumeric keys were allowed without quotes.
+  - Fixed multiline strings: OS/file independent (EOL is always `\n`). Also the last LF is removed.
+- v1.4.0
+  - Changed the browser interface to match the node api (which didn't change).
+  - Fixed parse for leading zeros ("00") and trailing comments.
+  - Fixed stringify for /**/ and //
+  - Added more test cases.
+- v1.3.0
+  - Added support for the simplified syntax.
+- v1.2.0
+  - Added old fashioned /**/ comments.
+  - Fixed the missing EOL (cli only).
+- v1.1.0
+  - add // support
+- v1.0.2
+  - stringify bug fixes
+- v1.0.0
+  - Switched to v1 for semver.
+  - Adds editing support via the `{ keepWsc: true }` option.
+  - Removes stringify(value, replacer, space) replacer support
+  - You can still use this syntax but replacer will no longer be called. This was removed in favor of editing support and because replacer provided an incomplete solution.
