@@ -1,5 +1,11 @@
 # hjson-js History
 
+- v1.7.4
+  - fix trailing space in quoteless strings
+  - fix default braces
+- v1.7.3
+  - fix root check
+  - better error messages
 - v1.7.2
   - fixed stringify, see laktak/hjson#29
   - optional root braces, see laktak/hjson#28
