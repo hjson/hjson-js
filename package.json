@@ -29,12 +29,7 @@
   "bugs": {
     "url": "https://github.com/laktak/hjson-js/issues"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/laktak/hjson-js/raw/master/LICENSE"
-    }
-  ],
+  "license": "MIT",
   "devDependencies": {
     "uglify-js": "^2.4.16"
   }
