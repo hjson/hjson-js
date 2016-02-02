@@ -1,5 +1,7 @@
 # hjson-js History
 
+- v1.7.6
+  - fix trailing whitespace in keyname
 - v1.7.4
   - fix trailing space in quoteless strings
   - fix default braces

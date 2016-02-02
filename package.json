@@ -3,7 +3,7 @@
   "description": "JSON for Humans, allows comments and is less error prone.",
   "main": "./lib/hjson.js",
   "author": "Christian Zangl",
-  "version": "1.7.5",
+  "version": "1.7.6",
   "keywords": [
     "json",
     "comments",
