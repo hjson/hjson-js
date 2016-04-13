@@ -100,6 +100,15 @@ Gets or sets the stringify EOL sequence ('\n' or '\r\n'). When running with node
 
 This is a shortcut to roundtrip your comments when reading and updating a config file. It is the same as specifying the keepWsc option for the parse and stringify functions.
 
+### require-hook
+
+Require a config file directly.
+
+```
+require("hjson/lib/require-config");
+var cfg=require("./config.hjson");
+```
+
 ## modify & keep comments
 
 You can modify a Hjson file and keep the whitespace & comments intact (round trip). This is useful if an app updates its config file.

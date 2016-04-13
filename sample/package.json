@@ -1,6 +1,6 @@
 {
   "private": true,
   "dependencies": {
-    "hjson": "^1.6.0"
+    "hjson": "^1.7.6"
   }
 }
