@@ -3,7 +3,9 @@
 [![Build Status](https://img.shields.io/travis/laktak/hjson-js.svg?style=flat-square)](http://travis-ci.org/laktak/hjson-js)
 [![NPM version](https://img.shields.io/npm/v/hjson.svg?style=flat-square)](http://www.npmjs.com/package/hjson)
 
-[Hjson](http://hjson.org), the Human JSON. A configuration file format that caters to humans and helps reduce the errors they make.
+[Hjson](http://hjson.org), the Human JSON. A configuration file format for humans. Relaxed syntax, fewer mistakes, more comments.
+
+![Hjson Intro](http://hjson.org/hjson1.gif)
 
 ```
 {
