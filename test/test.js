@@ -55,7 +55,8 @@ function test(name, file, isJson, inputCr, outputCr) {
 
 console.log("running tests...");
 
-fs.readdirSync(rootDir).forEach(function(file) {
+var tests=fs.readdirSync(rootDir);
+tests.forEach(function(file) {
   var name = file.split("_test.");
   if (name.length < 2) return;
   var isJson = name[2] === "json";
