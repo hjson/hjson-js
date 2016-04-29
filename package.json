@@ -1,6 +1,6 @@
 {
   "name": "hjson",
-  "description": "JSON for Humans, allows comments and is less error prone.",
+  "description": "JSON for Humans. A configuration file format with relaxed syntax, fewer mistakes and more comments.",
   "main": "./lib/hjson.js",
   "author": "Christian Zangl",
   "version": "1.8.4",
