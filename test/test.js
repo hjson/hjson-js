@@ -6,16 +6,18 @@ var rootDir = path.normalize(path.join(__dirname, "assets"));
 
 var argv=process.argv.slice(2)
 var filter=argv[0];
+var success=true;
 
-function failErr(name, type, s1, s2) {
-  console.log(name+" "+type+" FAILED!");
+function failErr(name, type, s1, s2, msg) {
+  msg=msg||"  "+name+" "+type+" FAILED!";
+  console.log(msg);
   if (s1 || s2) {
     console.log("--- actual:");
     console.log(s1);
     console.log("--- expected:");
     console.log(s2);
   }
-  process.exit(1);
+  success=false;
 }
 
 function load(file, cr) {
@@ -46,7 +48,7 @@ function test(name, file, isJson, inputCr, outputCr) {
         if (json1 !== json2) failErr(name, "json chk", json1, json2);
       }
     }
-    else failErr(name, "should fail");
+    else failErr(name, null, null, null, "  should fail but succeeded");
   }
   catch (err) {
     if (!shouldFail) failErr(name, "exception", err.toString(), "");
@@ -63,12 +65,13 @@ tests.forEach(function(file) {
   name = name[0];
 
   if (filter && name.indexOf(filter) < 0) return; // ignore
+
+  console.log("- "+name);
   test(name, file, isJson, false, false);
   test(name, file, isJson, false, true);
   test(name, file, isJson, true, false);
   test(name, file, isJson, true, true);
-
-  console.log("- "+name+" OK");
 });
 
-console.log("ALL OK!");
+console.log(success?"ALL OK!":"FAIL!");
+process.exit(success?0:1);

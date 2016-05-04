@@ -1,5 +1,15 @@
 # hjson-js History
 
+- v2.0.0
+  - add stricter check for {}[],: at the start of a quoteless string
+- v1.8.4
+  - fix multiline stringify
+- v1.8.3
+  - fix stringify for key names containing comments/control characters
+- v1.8.2
+  - better parse for single JSON values
+- v1.8.1
+  - detect EOF when looking for a key name
 - v1.7.6
   - fix trailing whitespace in keyname
 - v1.7.4
