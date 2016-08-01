@@ -1,5 +1,7 @@
 # hjson-js History
 
+- v2.0.1
+  - simpler stringify
 - v2.0.0
   - add stricter check for {}[],: at the start of a quoteless string
 - v1.8.4
