@@ -1,5 +1,7 @@
 # hjson-js History
 
+- v2.0.2
+  - remove obsoletes
 - v2.0.1
   - simpler stringify
 - v2.0.0
