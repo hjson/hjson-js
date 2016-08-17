@@ -1,5 +1,7 @@
 # hjson-js History
 
+- v2.0.4
+  - move to hjson org
 - v2.0.3
   - fix stringify regression
   - add test
@@ -26,8 +28,8 @@
   - fix root check
   - better error messages
 - v1.7.2
-  - fixed stringify, see laktak/hjson#29
-  - optional root braces, see laktak/hjson#28
+  - fixed stringify, see hjson/hjson#29
+  - optional root braces, see hjson/hjson#28
 - v1.6.3
   - added stringify options
 - v1.6.1

@@ -3,7 +3,7 @@
   "description": "JSON for Humans. A configuration file format with relaxed syntax, fewer mistakes and more comments.",
   "main": "./lib/hjson.js",
   "author": "Christian Zangl",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "keywords": [
     "json",
     "comments",
@@ -24,10 +24,10 @@
   "homepage": "http://hjson.org",
   "repository": {
     "type": "git",
-    "url": "https://github.com/laktak/hjson-js.git"
+    "url": "https://github.com/hjson/hjson-js.git"
   },
   "bugs": {
-    "url": "https://github.com/laktak/hjson-js/issues"
+    "url": "https://github.com/hjson/hjson-js/issues"
   },
   "license": "MIT",
   "devDependencies": {

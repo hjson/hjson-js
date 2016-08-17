@@ -1,8 +1,8 @@
 # hjson-js
 
-[![Build Status](https://img.shields.io/travis/laktak/hjson-js.svg?style=flat-square)](http://travis-ci.org/laktak/hjson-js)
+[![Build Status](https://img.shields.io/travis/hjson/hjson-js.svg?style=flat-square)](http://travis-ci.org/hjson/hjson-js)
 [![NPM version](https://img.shields.io/npm/v/hjson.svg?style=flat-square)](http://www.npmjs.com/package/hjson)
-[![License](https://img.shields.io/github/license/laktak/hjson-js.svg?style=flat-square)](https://github.com/laktak/hjson-js/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/hjson/hjson-js.svg?style=flat-square)](https://github.com/hjson/hjson-js/blob/master/LICENSE)
 
 [Hjson](http://hjson.org), the Human JSON. A configuration file format for humans. Relaxed syntax, fewer mistakes, more comments.
 
