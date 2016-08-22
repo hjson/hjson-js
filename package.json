@@ -3,7 +3,7 @@
   "description": "JSON for Humans. A configuration file format with relaxed syntax, fewer mistakes and more comments.",
   "main": "./lib/hjson.js",
   "author": "Christian Zangl",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "keywords": [
     "json",
     "comments",
