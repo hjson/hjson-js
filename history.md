@@ -1,5 +1,7 @@
 # hjson-js History
 
+- v2.0.6
+  - show better messages for parsing errors on a root object without braces
 - v2.0.5
   - fix stringify for strings staring with a punctuator char
 - v2.0.4
