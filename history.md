@@ -2,6 +2,7 @@
 
 - v2.0.6
   - show better messages for parsing errors on a root object without braces
+  - include error hint when a missing closing } or ] is part of a string
 - v2.0.5
   - fix stringify for strings staring with a punctuator char
 - v2.0.4
