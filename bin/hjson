@@ -40,7 +40,11 @@ else {
 function convert(text) {
   var obj;
   try { obj=Hjson.parse(text, { keepWsc: args.rt }); }
-  catch (e) { console.error(e.toString()); return; }
+  catch (e) {
+    console.error(e.toString());
+    if (e.hint) console.error("\nhint: "+e.hint);
+    return;
+  }
 
   var result;
   if (args.c || args.json==="compact") result = JSON.stringify(obj);
