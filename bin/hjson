@@ -9,19 +9,27 @@ Hjson.setEndOfLine(os.EOL);
 var args={}, argv=[];
 process.argv.slice(2).forEach(function(x) { if (x[0]==="-") { var i=x.indexOf("="); args[x.substr(1, i>0?i-1:undefined)]=i>0?x.substr(i+1):true; } else argv.push(x); });
 
-if (args["-help"] || args["-?"] || args["?"] || args.h) {
-  console.error("usage: hjson [OPTIONS] [INPUT]");
+if (args["-help"] || args["?"] || args.h) {
+  console.error("Hjson, the Human JSON.");
   console.error();
-  console.error("  hjson can be used to convert JSON from/to Hjson.");
+  console.error("Usage:");
+  console.error("  hjson [OPTIONS]");
+  console.error("  hjson [OPTIONS] INPUT");
+  console.error("  hjson (-h | --help | -?)");
+  console.error("  hjson (-V | --version)");
   console.error();
-  console.error("  hjson will read the given JSON/Hjson input file or read from stdin.");
-  console.error("  - default: will output as Hjson.");
-  console.error("    - with -sl: will output the opening brace on the same line.");
-  console.error("    - with -root: will output braces for the root object.");
-  console.error("    - with -quote: will quote all strings.");
-  console.error("    - with -rt: will round trip comments.");
-  console.error("  - with -j or -json: will output as formatted JSON.");
-  console.error("  - with -c or -json=compact: will output as JSON.");
+  console.error("INPUT can be in JSON or Hjson format.");
+  console.error("If no file is given it will read from stdin.");
+  console.error("The default is to output as Hjson.");
+  console.error();
+  console.error("Options:");
+  console.error("  (-j | -json)  output as formatted JSON.");
+  console.error("  (-c | -json=compact)  output as JSON.");
+  console.error("  -sl     output the opening brace on the same line (Hjson)");
+  console.error("  -root   output braces for the root object (Hjson)");
+  console.error("  -quote  quote all strings (Hjson)");
+  console.error("  -rt     round trip comments (Hjson)");
+  console.error("  -nocol  disable colors (Hjson)");
   return 0;
 }
 
@@ -47,7 +55,8 @@ function convert(text) {
   }
 
   var result;
-  if (args.c || args.json==="compact") result = JSON.stringify(obj);
+  if (args.V || args["-version"]) result = "Hjson.js " + Hjson.version;
+  else if (args.c || args.json==="compact") result = JSON.stringify(obj);
   else if (args.j || args.json) result = JSON.stringify(obj, null, 2);
   else {
     result = Hjson.stringify(obj, {
@@ -55,6 +64,7 @@ function convert(text) {
       bracesSameLine: args.sl,
       quotes: args.quote?"always":"min",
       keepWsc: args.rt,
+      colors: !args.nocol && process.stdout.isTTY,
     });
   }
 

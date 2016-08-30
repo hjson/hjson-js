@@ -8,7 +8,7 @@
 
 ![Hjson Intro](http://hjson.org/hjson1.gif)
 
-```
+```Hjson
 {
   # specify rate in requests/second (because comments are helpful!)
   rate: 1000
@@ -51,22 +51,31 @@ To keep comments intact see [API](#modify--keep-comments).
 Install with `npm install hjson -g`.
 
 ```
-usage: hjson [OPTIONS] [INPUT]
+Usage:
+  hjson [OPTIONS]
+  hjson [OPTIONS] INPUT
+  hjson (-h | --help | -?)
+  hjson (-V | --version)
 
-  hjson can be used to convert JSON from/to Hjson.
+INPUT can be in JSON or Hjson format.
+If no file is given it will read from stdin.
+The default is to output as Hjson.
 
-  hjson will read the given JSON/Hjson input file or read from stdin.
-  - default: will output as Hjson.
-    - with -sl: will output the opening brace on the same line.
-    - with -root: will output braces for the root object.
-    - with -quote: will quote all strings.
-  - with -j or -json: will output as formatted JSON.
-  - with -c or -json=compact: will output as JSON.
+Options:
+  (-j | -json)  output as formatted JSON.
+  (-c | -json=compact)  output as JSON.
+  -sl     output the opening brace on the same line (Hjson)
+  -root   output braces for the root object (Hjson)
+  -quote  quote all strings (Hjson)
+  -rt     round trip comments (Hjson)
+  -nocol  disable colors (Hjson)
+
 ```
 
 Sample:
-- run `hjson test.json > test.hjson` to convert to Hjson
 - run `hjson -j test.hjson > test.json` to convert to JSON
+- run `hjson test.json > test.hjson` to convert to Hjson
+- run `hjson test.json` to view colorized output
 
 
 # API

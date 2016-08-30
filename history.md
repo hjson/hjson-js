@@ -1,5 +1,7 @@
 # hjson-js History
 
+- v2.0.7
+  - added stringify color option (CLI)
 - v2.0.6
   - show better messages for parsing errors on a root object without braces
   - include error hint when a missing closing } or ] is part of a string
