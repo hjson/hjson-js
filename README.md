@@ -104,6 +104,7 @@ This method produces Hjson text from a JavaScript value.
     - "always": always use quotes
   - *space*: specifies the indentation of nested structures. If it is a number, it will specify the number of spaces to indent at each level. If it is a string (such as '\t' or '&nbsp;'), it contains the characters used to indent at each level.
   - *eol*: specifies the EOL sequence (default is set by Hjson.setEndOfLine())
+  - *colors*: boolean, output ascii color codes
 
 ### Hjson.endOfLine(), .setEndOfLine(eol)
 
@@ -112,6 +113,10 @@ Gets or sets the stringify EOL sequence ('\n' or '\r\n'). When running with node
 ### Hjson.rt { parse, stringify }
 
 This is a shortcut to roundtrip your comments when reading and updating a config file. It is the same as specifying the keepWsc option for the parse and stringify functions.
+
+### Hjson.version
+
+The version number.
 
 ### require-hook
 
