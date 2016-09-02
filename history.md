@@ -1,6 +1,7 @@
 # hjson-js History
 
 - v2.0.8
+  - add DSF (domain specific formats), experimental
   - refactor
 - v2.0.7
   - added stringify color option (CLI)

@@ -57,19 +57,22 @@ Usage:
   hjson (-h | --help | -?)
   hjson (-V | --version)
 
-INPUT can be in JSON or Hjson format.
-If no file is given it will read from stdin.
+INPUT can be in JSON or Hjson format. If no file is given it will read from stdin.
 The default is to output as Hjson.
 
 Options:
   (-j | -json)  output as formatted JSON.
   (-c | -json=compact)  output as JSON.
   -sl     output the opening brace on the same line (Hjson)
-  -root   output braces for the root object (Hjson)
+  -noroot omit braces for the root object (Hjson)
   -quote  quote all strings (Hjson)
   -rt     round trip comments (Hjson)
   -nocol  disable colors (Hjson)
 
+Domain specific formats are optional extensions to Hjson and can be enabled with the following options:
+  +math: support for Inf/inf, -Inf/-inf, Nan/naN and -0
+  +hex: parse hexadecimal numbers prefixed with 0x
+  +date: support ISO dates
 ```
 
 Sample:
@@ -81,6 +84,8 @@ Sample:
 # API
 
 The API is the same for the browser and node.js version.
+
+**NOTE that the DSF api is considered experimental**
 
 ### Hjson.parse(text, options)
 

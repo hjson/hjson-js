@@ -21,7 +21,8 @@
     "lint": "jshint bin/hjson lib/*.js",
     "min": "browserify lib/hjson.js --ignore os -s Hjson -o bundle/hjson.js && node node_modules/uglify-js/bin/uglifyjs bundle/hjson.js --comments -c -m -o bundle/hjson.min.js",
     "ver": "node -e 'console.log(\"module.exports=\\\"\"+eval(\"(\"+process.argv[1]+\")\").version+\"\\\";\");' -- \"`cat package.json`\" > lib/hjson-version.js",
-    "prep": "npm run ver && npm run test && npm run lint && npm run min"
+    "ver2": "node -e 'var v=\" * Hjson v\"+eval(\"(\"+process.argv[1]+\")\").version; if (v!==process.argv[2]) throw new Error(\"ver\");' -- \"`cat package.json`\" \"`grep -E '\\* Hjson v.*$' lib/hjson.js`\"",
+    "prep": "npm run ver && npm run ver2 && npm run test && npm run lint && npm run min"
   },
   "homepage": "http://hjson.org",
   "repository": {

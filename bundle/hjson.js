@@ -3,6 +3,81 @@
 /* jslint node: true */
 "use strict";
 
+function math(opt) {
+  return {
+    name: "math",
+    parse: function (value) {
+      switch (value) {
+        case "+inf":
+        case "inf":
+        case "+Inf":
+        case "Inf": return Infinity;
+        case "-inf":
+        case "-Inf": return -Infinity;
+        case "-0": return -0;
+        case "nan":
+        case "NaN": return NaN;
+      }
+    },
+    stringify: function (value) {
+      if (typeof value !== 'number') return;
+      if (1 / value === -Infinity) return "-0"; // 0 === -0
+      if (value === Infinity) return "Inf";
+      if (value === -Infinity) return "-Inf";
+      if (isNaN(value)) return "NaN";
+    },
+  };
+}
+math.description="support for Inf/inf, -Inf/-inf, Nan/naN and -0";
+
+function hex(opt) {
+  var out=opt && opt.out;
+  return {
+    name: "hex",
+    parse: function (value) {
+      if (/^0x[0-9A-Fa-f]+$/.test(value))
+        return parseInt(value, 16);
+    },
+    stringify: function (value) {
+      if (out && Number.isInteger(value))
+        return "0x"+value.toString(16);
+    },
+  };
+}
+hex.description="parse hexadecimal numbers prefixed with 0x";
+
+function date(opt) {
+  return {
+    name: "date",
+    parse: function (value) {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(value) ||
+        /^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}(?:.\d+)(?:Z|[+-]\d{2}:\d{2})$/.test(value)) {
+        var dt = Date.parse(value);
+        if (!isNaN(dt)) return new Date(dt);
+      }
+    },
+    stringify: function (value) {
+      if (Object.prototype.toString.call(value) === '[object Date]') {
+        var dt = value.toISOString();
+        if (dt.indexOf("T00:00:00.000Z", dt.length - 14) !== -1) return dt.substr(0, 10);
+        else return dt;
+      }
+    },
+  };
+}
+date.description="support ISO dates";
+
+module.exports = {
+  math: math,
+  hex: hex,
+  date: date,
+};
+
+},{}],2:[function(require,module,exports){
+/* Hjson http://hjson.org */
+/* jslint node: true */
+"use strict";
+
 module.exports = function (text, stopAtNext) {
 
   // try to parse a number
@@ -62,18 +137,58 @@ module.exports = function (text, stopAtNext) {
   else return number;
 };
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 /* Hjson http://hjson.org */
 /* jslint node: true */
 "use strict";
 
 var os=require('os'); // will be {} when used in a browser
 
+function loadDsf(col, parse) {
+
+  if (Object.prototype.toString.apply(col) !== '[object Array]') {
+    if (col) throw new Error("dsf option must contain an array!");
+    else return nopDsf;
+  } else if (col.length === 0) return nopDsf;
+
+  var dsf = [];
+  function isFunction(f) { return {}.toString.call(f) === '[object Function]'; }
+
+  col.forEach(function(x) {
+    if (!x.name || !isFunction(x.parse) || !isFunction(x.stringify))
+      throw new Error("extension does not match the DSF interface");
+    dsf.push(function() {
+      try {
+        return (parse?x.parse:x.stringify).apply(null, arguments);
+      } catch (e) {
+        throw new Error("DSF-"+x.name+" failed; "+e.message);
+      }
+    });
+  });
+
+  return runDsf.bind(null, dsf);
+}
+
+function runDsf(dsf, value, value2) {
+  if (dsf) {
+    for (var i = 0; i < dsf.length; i++) {
+      var res = dsf[i](value);
+      if (res !== undefined) return res;
+    }
+  }
+  return value2;
+}
+
+function nopDsf(value, value2) {
+  return value2;
+}
+
 module.exports = {
   EOL: os.EOL || '\n',
+  loadDsf: loadDsf,
 };
 
-},{"os":7}],3:[function(require,module,exports){
+},{"os":8}],4:[function(require,module,exports){
 /* Hjson http://hjson.org */
 /* jslint node: true */
 "use strict";
@@ -81,6 +196,7 @@ module.exports = {
 module.exports = function($source, $opt) {
 
   var tryParseNumber = require("./hjson-num");
+  var hjsonOpt = require("./hjson-opt");
 
   var text;
   var at;   // The index of the current character
@@ -97,6 +213,7 @@ module.exports = function($source, $opt) {
   };
 
   var keepWsc; // keep whitespace
+  var dsf; // domain specific formats
 
   function resetAt() {
     at = 0;
@@ -278,12 +395,13 @@ module.exports = function($source, $opt) {
           default:
             if (chf === '-' || chf >= '0' && chf <= '9') {
               var n = tryParseNumber(value);
-              if (n !== undefined) return n;
+              if (n !== undefined) return dsf(value, n);
             }
         }
         if (isEol) {
           // remove any whitespace at the end (ignored in quoteless strings)
-          return value.trim();
+          value = value.trim();
+          return dsf(value, value);
         }
       }
       value += ch;
@@ -471,9 +589,11 @@ module.exports = function($source, $opt) {
   }
 
   function hjsonParse(source, opt) {
-    if (opt) {
+    if (opt && typeof opt === 'object') {
       keepWsc = opt.keepWsc;
+      dsf = hjsonOpt.loadDsf(opt.dsf, true);
     }
+    else dsf = hjsonOpt.loadDsf(null, true);
     text = source;
     resetAt();
     return rootValue();
@@ -482,7 +602,7 @@ module.exports = function($source, $opt) {
   return hjsonParse($source, $opt);
 };
 
-},{"./hjson-num":1}],4:[function(require,module,exports){
+},{"./hjson-num":2,"./hjson-opt":3}],5:[function(require,module,exports){
 /* Hjson http://hjson.org */
 /* jslint node: true */
 "use strict";
@@ -491,6 +611,8 @@ module.exports = function($value, $opt) {
 
   var tryParseNumber = require("./hjson-num");
   var hjsonOpt = require("./hjson-opt");
+
+  var dsf; // domain specific formats
 
   // needsEscape tests if the string can be written without escapes
   var needsEscape = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
@@ -526,6 +648,7 @@ module.exports = function($value, $opt) {
     mstr: [ "'''", "'''" ],
     num:  [ '', '' ],
     lit:  [ '', '' ],
+    dsf:  [ '', '' ],
     esc:  [ '\\', '' ],
     uni:  [ '\\u', '' ],
     rem:  [ '', '' ],
@@ -625,6 +748,10 @@ module.exports = function($value, $opt) {
     }
 
     // What happens next depends on the value's type.
+
+    // check for DSF
+    var dsfValue = dsf(value);
+    if (dsfValue !== undefined) return wrap(token.dsf, dsfValue);
 
     switch (typeof value) {
       case 'string':
@@ -741,6 +868,7 @@ module.exports = function($value, $opt) {
       bracesSameLine = opt.bracesSameLine;
       emitRootBraces = opt.emitRootBraces;
       quoteAlways = opt.quotes === 'always';
+      dsf = hjsonOpt.loadDsf(opt.dsf, false);
 
       if (opt.colors === true) {
         token = {
@@ -754,12 +882,14 @@ module.exports = function($value, $opt) {
           mstr: [ "\x1b[37;1m'''", "'''\x1b[0m" ],
           num:  [ '\x1b[36;1m', '\x1b[0m' ],
           lit:  [ '\x1b[36m', '\x1b[0m' ],
+          dsf:  [ '\x1b[37m', '\x1b[0m' ],
           esc:  [ '\x1b[31m\\', '\x1b[0m' ],
           uni:  [ '\x1b[31m\\u', '\x1b[0m' ],
           rem:  [ '\x1b[30;1m', '\x1b[0m' ],
         };
       }
     }
+    else dsf = hjsonOpt.loadDsf(null, true);
 
     // If the space parameter is a number, make an indent string containing that
     // many spaces. If it is a string, it will be used as the indent string.
@@ -778,10 +908,10 @@ module.exports = function($value, $opt) {
   return hjsonStringify($value, $opt);
 };
 
-},{"./hjson-num":1,"./hjson-opt":2}],5:[function(require,module,exports){
+},{"./hjson-num":2,"./hjson-opt":3}],6:[function(require,module,exports){
 module.exports="2.0.8";
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /*! @preserve
  * Hjson v2.0.8
  * http://hjson.org
@@ -805,6 +935,8 @@ module.exports="2.0.8";
         keepWsc     boolean, keep white space and comments. This is useful
                     if you want to edit an hjson file and save it while
                     preserving comments (default false)
+
+        dsf         array of DSF (see Hjson.dsf)
       }
 
       This method parses Hjson text to produce an object or array.
@@ -839,6 +971,8 @@ module.exports="2.0.8";
                     Hjson.setEndOfLine())
 
         colors      boolean, output ascii color codes
+
+        dsf         array of DSF (see Hjson.dsf)
       }
 
       This method produces Hjson text from a JavaScript value.
@@ -865,7 +999,35 @@ module.exports="2.0.8";
 
     Hjson.version
 
-      The version of this file.
+      The version of this library.
+
+
+    Hjson.dsf
+
+      Domain specific formats are extensions to the Hjson syntax (see
+      hjson.org). These formats will be parsed and made available to
+      the application in place of strings (e.g. enable math to allow
+      NaN values).
+
+      Hjson.dsf ontains standard DSFs that can be passed to parse
+      and stringify.
+
+
+    Hjson.dsf.math()
+
+      Enables support for Inf/inf, -Inf/-inf, Nan/naN and -0.
+      Will output as Inf, -Inf, NaN and -0.
+
+
+    Hjson.dsf.hex(options)
+
+      Parse hexadecimal numbers prefixed with 0x.
+      set options.out = true to stringify _all_ integers as hex.
+
+
+    Hjson.dsf.date(options)
+
+      support ISO dates
 
 
   This is a reference implementation. You are free to copy, modify, or
@@ -905,9 +1067,11 @@ module.exports={
     },
   },
 
+  dsf: require("./hjson-dsf"),
+
 };
 
-},{"./hjson-opt":2,"./hjson-parse":3,"./hjson-stringify":4,"./hjson-version":5}],7:[function(require,module,exports){
+},{"./hjson-dsf":1,"./hjson-opt":3,"./hjson-parse":4,"./hjson-stringify":5,"./hjson-version":6}],8:[function(require,module,exports){
 
-},{}]},{},[6])(6)
+},{}]},{},[7])(7)
 });
