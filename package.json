@@ -3,7 +3,7 @@
   "description": "JSON for Humans. A configuration file format with relaxed syntax, fewer mistakes and more comments.",
   "main": "./lib/hjson.js",
   "author": "Christian Zangl",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "keywords": [
     "json",
     "comments",
@@ -18,8 +18,10 @@
   },
   "scripts": {
     "test": "node ./test/test.js",
-    "lint": "jshint bin/hjson lib/hjson.js",
-    "min": "node node_modules/uglify-js/bin/uglifyjs lib/hjson.js --comments -c -m -o lib/hjson.min.js"
+    "lint": "jshint bin/hjson lib/*.js",
+    "min": "browserify lib/hjson.js --ignore os -s Hjson -o bundle/hjson.js && node node_modules/uglify-js/bin/uglifyjs bundle/hjson.js --comments -c -m -o bundle/hjson.min.js",
+    "ver": "node -e 'console.log(\"module.exports=\\\"\"+eval(\"(\"+process.argv[1]+\")\").version+\"\\\";\");' -- \"`cat package.json`\" > lib/hjson-version.js",
+    "prep": "npm run ver && npm run test && npm run lint && npm run min"
   },
   "homepage": "http://hjson.org",
   "repository": {

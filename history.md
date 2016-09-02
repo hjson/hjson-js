@@ -1,5 +1,7 @@
 # hjson-js History
 
+- v2.0.8
+  - refactor
 - v2.0.7
   - added stringify color option (CLI)
 - v2.0.6
