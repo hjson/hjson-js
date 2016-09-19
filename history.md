@@ -1,8 +1,10 @@
 # hjson-js History
 
-- v2.0.8
+- v2.1.0
   - add DSF (domain specific formats), experimental
-  - refactor
+  - refactor, use browserify for output (see bundle)
+  - fix emit root braces by default (was off)
+- v2.0.8 (not released)
 - v2.0.7
   - added stringify color option (CLI)
 - v2.0.6

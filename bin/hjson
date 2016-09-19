@@ -6,8 +6,12 @@ var os = require('os');
 var dsf=[];
 
 var args={}, argv=[];
-process.argv.slice(2).forEach(function(x) { if (x[0]==="-") { var i=x.indexOf("="); args[x.substr(1, i>0?i-1:undefined)]=i>0?x.substr(i+1):true; } else argv.push(x); });
-process.argv.slice(2).forEach(function(x) { if (x[0]==="+") { var i=x.indexOf("="); args[x.substr(0, i>0?i:undefined)]=i>0?x.substr(i+1):true; } else argv.push(x); });
+process.argv.slice(2).forEach(function(x) {
+  var i;
+  if (x[0]==="-") { i=x.indexOf("="); args[x.substr(1, i>0?i-1:undefined)]=i>0?x.substr(i+1):true; }
+  else if (x[0]==="+") { i=x.indexOf("="); args[x.substr(0, i>0?i:undefined)]=i>0?x.substr(i+1):true; }
+  else argv.push(x);
+});
 
 if (args["-help"] || args["?"] || args.h) {
   console.error("Hjson, the Human JSON.");

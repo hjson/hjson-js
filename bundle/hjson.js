@@ -5,10 +5,6 @@
 
 var os=require('os'); // will be {} when used in a browser
 
-function isPunctuatorChar(c) {
-  return c === '{' || c === '}' || c === '[' || c === ']' || c === ',' || c === ':';
-}
-
 function tryParseNumber(text, stopAtNext) {
 
   // try to parse a number
@@ -70,7 +66,6 @@ function tryParseNumber(text, stopAtNext) {
 
 module.exports = {
   EOL: os.EOL || '\n',
-  isPunctuatorChar: isPunctuatorChar,
   tryParseNumber: tryParseNumber,
 };
 
@@ -81,7 +76,7 @@ module.exports = {
 
 var common = require("./hjson-common");
 
-function loadDsf(col, parse) {
+function loadDsf(col, type) {
 
   if (Object.prototype.toString.apply(col) !== '[object Array]') {
     if (col) throw new Error("dsf option must contain an array!");
@@ -96,17 +91,18 @@ function loadDsf(col, parse) {
       throw new Error("extension does not match the DSF interface");
     dsf.push(function() {
       try {
-        if (parse) {
+        if (type == "parse") {
           return x.parse.apply(null, arguments);
-        } else {
+        } else if (type == "stringify") {
           var res=x.stringify.apply(null, arguments);
           // check result
           if (res !== undefined && (typeof res !== "string" ||
+            res.length === 0 ||
             res[0] === '"' ||
             [].some.call(res, function(c) { return isInvalidDsfChar(c); })))
-            throw new Error("value may not start with a quote or contain a punctuator character except colon: " + res);
+            throw new Error("value may not be empty, start with a quote or contain a punctuator character except colon: " + res);
           return res;
-        }
+        } else throw new Error("Invalid type");
       } catch (e) {
         throw new Error("DSF-"+x.name+" failed; "+e.message);
       }
@@ -116,18 +112,16 @@ function loadDsf(col, parse) {
   return runDsf.bind(null, dsf);
 }
 
-function runDsf(dsf, value, value2) {
+function runDsf(dsf, value) {
   if (dsf) {
     for (var i = 0; i < dsf.length; i++) {
       var res = dsf[i](value);
       if (res !== undefined) return res;
     }
   }
-  return value2;
 }
 
-function nopDsf(value, value2) {
-  return value2;
+function nopDsf(value) {
 }
 
 function isInvalidDsfChar(c) {
@@ -146,7 +140,6 @@ function math(opt) {
         case "Inf": return Infinity;
         case "-inf":
         case "-Inf": return -Infinity;
-        case "-0": return -0;
         case "nan":
         case "NaN": return NaN;
       }
@@ -415,13 +408,14 @@ module.exports = function($source, $opt) {
           default:
             if (chf === '-' || chf >= '0' && chf <= '9') {
               var n = common.tryParseNumber(value);
-              if (n !== undefined) return runDsf(value, n);
+              if (n !== undefined) return n;
             }
         }
         if (isEol) {
           // remove any whitespace at the end (ignored in quoteless strings)
           value = value.trim();
-          return runDsf(value, value);
+          var dsfValue = runDsf(value);
+          return dsfValue !== undefined ? dsfValue : value;
         }
       }
       value += ch;
@@ -609,11 +603,12 @@ module.exports = function($source, $opt) {
   }
 
   function hjsonParse(source, opt) {
+    var dsfDef = null;
     if (opt && typeof opt === 'object') {
       keepWsc = opt.keepWsc;
-      runDsf = dsf.loadDsf(opt.dsf, true);
+      dsfDef = opt.dsf;
     }
-    else runDsf = dsf.loadDsf(null, true);
+    runDsf = dsf.loadDsf(dsfDef, "parse");
     text = source;
     resetAt();
     return rootValue();
@@ -873,6 +868,7 @@ module.exports = function($value, $opt) {
 
   function hjsonStringify(value, opt) {
     var i, space;
+    var dsfDef = null;
 
     eol = common.EOL;
     indent = '  ';
@@ -886,9 +882,9 @@ module.exports = function($value, $opt) {
       space = opt.space;
       keepWsc = opt.keepWsc;
       bracesSameLine = opt.bracesSameLine;
-      emitRootBraces = opt.emitRootBraces;
+      emitRootBraces = opt.emitRootBraces !== false;
       quoteAlways = opt.quotes === 'always';
-      runDsf = dsf.loadDsf(opt.dsf, false);
+      dsfDef = opt.dsf;
 
       if (opt.colors === true) {
         token = {
@@ -909,7 +905,8 @@ module.exports = function($value, $opt) {
         };
       }
     }
-    else runDsf = dsf.loadDsf(null, true);
+
+    runDsf = dsf.loadDsf(dsfDef, 'stringify');
 
     // If the space parameter is a number, make an indent string containing that
     // many spaces. If it is a string, it will be used as the indent string.
@@ -929,11 +926,11 @@ module.exports = function($value, $opt) {
 };
 
 },{"./hjson-common":1,"./hjson-dsf":2}],5:[function(require,module,exports){
-module.exports="2.0.8";
+module.exports="2.1.0";
 
 },{}],6:[function(require,module,exports){
 /*! @preserve
- * Hjson v2.0.8
+ * Hjson v2.1.0
  * http://hjson.org
  *
  * Copyright 2014-2016 Christian Zangl, MIT license
