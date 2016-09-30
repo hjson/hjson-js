@@ -29,7 +29,6 @@ if (args["-help"] || args["?"] || args.h) {
   console.error("  (-j | -json)  output as formatted JSON.");
   console.error("  (-c | -json=compact)  output as JSON.");
   console.error("  -sl     output the opening brace on the same line (Hjson)");
-  console.error("  -noroot omit braces for the root object (Hjson)");
   console.error("  -quote  quote all strings (Hjson)");
   console.error("  -rt     round trip comments (Hjson)");
   console.error("  -nocol  disable colors (Hjson)");
@@ -76,7 +75,6 @@ function convert(text) {
   else if (args.j || args.json) result = JSON.stringify(obj, null, 2);
   else {
     result = Hjson.stringify(obj, {
-      emitRootBraces: !args.noroot,
       bracesSameLine: args.sl,
       quotes: args.quote?"always":"min",
       keepWsc: args.rt,

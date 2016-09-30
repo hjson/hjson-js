@@ -523,7 +523,6 @@ module.exports = function($source, $opt) {
       if (keepWsc) {
         if (Object.defineProperty) Object.defineProperty(object, "__WSC__", { enumerable: false, writable: true });
         object.__WSC__ = kw = { c: {}, o: []  };
-        if (withoutBraces) kw.noRootBraces = true;
       }
 
       if (!withoutBraces) {
@@ -651,7 +650,7 @@ module.exports = function($value, $opt) {
   var gap = '';
   var indent = '  ';
   // options
-  var eol, keepWsc, bracesSameLine, quoteAlways, emitRootBraces;
+  var eol, keepWsc, bracesSameLine, quoteAlways;
   var token = {
     obj:  [ '{', '}' ],
     arr:  [ '[', ']' ],
@@ -792,11 +791,10 @@ module.exports = function($value, $opt) {
         if (keepWsc) kw = value.__WSC__;
 
         var isArray = Object.prototype.toString.apply(value) === '[object Array]';
-        var showBraces = isArray || !isRootObject || (kw ? !kw.noRootBraces : emitRootBraces);
 
         // Make an array to hold the partial results of stringifying this object value.
         var mind = gap;
-        if (showBraces) gap += indent;
+        gap += indent;
         var eolMind = eol + mind;
         var eolGap = eol + gap;
         var prefix = noIndent || bracesSameLine ? '' : eolMind;
@@ -834,12 +832,12 @@ module.exports = function($value, $opt) {
 
             for (i = 0, length = keys.length; i < length; i++) {
               k = keys[i];
-              if (showBraces || i>0 || kwl) partial.push(kwl + eolGap);
+              partial.push(kwl + eolGap);
               kwl = wsc(kw.c[k]);
               v = str(value[k], testWsc(kwl));
               if (v) partial.push(quoteKey(k) + token.col + (startsWithNL(v) ? '' : ' ') + v);
             }
-            if (showBraces || kwl) partial.push(kwl + eolMind);
+            partial.push(kwl + eolMind);
           } else {
             for (k in value) {
               if (Object.prototype.hasOwnProperty.call(value, k)) {
@@ -852,12 +850,10 @@ module.exports = function($value, $opt) {
           // Join all of the member texts together, separated with newlines
           if (partial.length === 0) {
             v = wrap(token.obj, '');
-          } else if (showBraces) {
+          } else {
             // and wrap them in braces
             if (kw) v = prefix + wrap(token.obj, partial.join(''));
             else v = prefix + wrap(token.obj, eolGap + partial.join(eolGap) + eolMind);
-          } else {
-            v = partial.join(kw ? '' : eolGap);
           }
         }
 
@@ -874,7 +870,6 @@ module.exports = function($value, $opt) {
     indent = '  ';
     keepWsc = false;
     bracesSameLine = false;
-    emitRootBraces = true;
     quoteAlways = false;
 
     if (opt && typeof opt === 'object') {
@@ -882,7 +877,6 @@ module.exports = function($value, $opt) {
       space = opt.space;
       keepWsc = opt.keepWsc;
       bracesSameLine = opt.bracesSameLine;
-      emitRootBraces = opt.emitRootBraces !== false;
       quoteAlways = opt.quotes === 'always';
       dsfDef = opt.dsf;
 
@@ -926,11 +920,11 @@ module.exports = function($value, $opt) {
 };
 
 },{"./hjson-common":1,"./hjson-dsf":2}],5:[function(require,module,exports){
-module.exports="2.1.0";
+module.exports="2.2.0";
 
 },{}],6:[function(require,module,exports){
 /*! @preserve
- * Hjson v2.1.0
+ * Hjson v2.2.0
  * http://hjson.org
  *
  * Copyright 2014-2016 Christian Zangl, MIT license
@@ -973,7 +967,7 @@ module.exports="2.1.0";
                     name. Default false.
 
         emitRootBraces
-                    boolean, show braces for the root object. Default true.
+                    obsolete: will always emit braces
 
         quotes      string, controls how strings are displayed.
                     "min"     - no quotes whenever possible (default)
