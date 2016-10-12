@@ -422,18 +422,24 @@ module.exports = function($source, $opt) {
     }
   }
 
-  function getComment(wat) {
+  function getComment(cAt) {
     var i;
-    wat--;
+    cAt--;
     // remove trailing whitespace
-    for (i = at - 2; i > wat && text[i] <= ' ' && text[i] !== '\n'; i--);
     // but only up to EOL
+    for (i = at - 2; i > cAt && text[i] <= ' ' && text[i] !== '\n'; i--);
     if (text[i] === '\n') i--;
     if (text[i] === '\r') i--;
-    var res = text.substr(wat, i-wat+1);
-    for (i = 0; i < res.length; i++)
-      if (res[i] > ' ') return res;
-    return "";
+    var res = text.substr(cAt, i-cAt+1);
+    // return if we find anything other than whitespace
+    for (i = 0; i < res.length; i++) {
+      if (res[i] > ' ') {
+        var j = res.indexOf('\n');
+        if (j >= 0) return [res.substr(0, j), res.substr(j+1)];
+        else return [res];
+      }
+    }
+    return [];
   }
 
   function errorClosingHint(value) {
@@ -475,31 +481,38 @@ module.exports = function($source, $opt) {
     // assuming ch === '['
 
     var array = [];
-    var kw, wat;
+    var comments, cAt, nextComment;
     try {
       if (keepWsc) {
-        if (Object.defineProperty) Object.defineProperty(array, "__WSC__", { enumerable: false, writable: true });
-        array.__WSC__ = kw = [];
+        if (Object.defineProperty) Object.defineProperty(array, "__COMMENTS__", { enumerable: false, writable: true });
+        array.__COMMENTS__ = comments = [];
       }
 
       next();
-      wat = at;
+      cAt = at;
       white();
-      if (kw) kw.push(getComment(wat));
+      if (comments) nextComment = getComment(cAt).join('');
       if (ch === ']') {
         next();
+        if (comments) comments.push([nextComment]);
         return array;  // empty array
       }
 
       while (ch) {
         array.push(value());
-        wat = at;
+        cAt = at;
         white();
         // in Hjson the comma is optional and trailing commas are allowed
-        if (ch === ',') { next(); wat = at; white(); }
-        if (kw) kw.push(getComment(wat));
+        // note that we do not keep comments before the , if there are any
+        if (ch === ',') { next(); cAt = at; white(); }
+        if (comments) {
+          var c = getComment(cAt);
+          comments.push([nextComment||"", c[0]||""]);
+          nextComment = c[1];
+        }
         if (ch === ']') {
           next();
+          if (comments) comments[comments.length-1][1] += nextComment||"";
           return array;
         }
         white();
@@ -515,25 +528,25 @@ module.exports = function($source, $opt) {
   function object(withoutBraces) {
     // Parse an object value.
 
-    var key, object = {};
-    var kw, wat;
-    function pushWhite(key) { kw.c[key]=getComment(wat); if (key) kw.o.push(key); }
+    var key = "", object = {};
+    var comments, cAt, nextComment;
 
     try {
       if (keepWsc) {
-        if (Object.defineProperty) Object.defineProperty(object, "__WSC__", { enumerable: false, writable: true });
-        object.__WSC__ = kw = { c: {}, o: []  };
+        if (Object.defineProperty) Object.defineProperty(object, "__COMMENTS__", { enumerable: false, writable: true });
+        object.__COMMENTS__ = comments = { c: {}, o: []  };
       }
 
       if (!withoutBraces) {
         // assuming ch === '{'
         next();
-        wat = at;
-      } else wat = 1;
+        cAt = at;
+      } else cAt = 1;
 
       white();
-      if (kw) pushWhite("");
+      if (comments) nextComment = getComment(cAt).join('');
       if (ch === '}' && !withoutBraces) {
+        if (comments) comments.c[""] = [nextComment];
         next();
         return object;  // empty object
       }
@@ -544,13 +557,20 @@ module.exports = function($source, $opt) {
         next();
         // duplicate keys overwrite the previous value
         object[key] = value();
-        wat = at;
+        cAt = at;
         white();
         // in Hjson the comma is optional and trailing commas are allowed
-        if (ch === ',') { next(); wat = at; white(); }
-        if (kw) pushWhite(key);
+        // note that we do not keep comments before the , if there are any
+        if (ch === ',') { next(); cAt = at; white(); }
+        if (comments) {
+          var c = getComment(cAt);
+          comments.c[key] = [nextComment||"", c[0]||""];
+          nextComment = c[1];
+          if (key) comments.o.push(key);
+        }
         if (ch === '}' && !withoutBraces) {
           next();
+          if (comments) comments.c[key][1] += nextComment||"";
           return object;
         }
         white();
@@ -602,6 +622,7 @@ module.exports = function($source, $opt) {
   }
 
   function hjsonParse(source, opt) {
+    if (typeof source!=="string") throw new Error("source is not a string");
     var dsfDef = null;
     if (opt && typeof opt === 'object') {
       keepWsc = opt.keepWsc;
@@ -748,16 +769,18 @@ module.exports = function($value, $opt) {
     // Produce a string from value.
 
     function startsWithNL(str) { return str && str[str[0] === '\r' ? 1 : 0] === '\n'; }
-    function testWsc(str) { return str && !startsWithNL(str); }
-    function wsc(str) {
+    function commentOnThisLine(str) { return str && !startsWithNL(str); }
+    function makeComment(str, prefix, trim) {
       if (!str) return "";
-      var i, len = str.length;
+      var i, s = -1, len = str.length;
       for (i = 0; i < len; i++) {
         var c = str[i];
         if (c === '#' || c === '/' && (str[i+1] === '/' || str[i+1] === '*')) break;
         else if (c > ' ') { str = '# ' + str; break; }
+        else s = i; // space
       }
-      if (i < len) return " " + wrap(token.rem, str);
+      if (trim && s >= 0) str = str.substr(s + 1);
+      if (i < len) return prefix + wrap(token.rem, str);
       else return str;
     }
 
@@ -787,8 +810,8 @@ module.exports = function($value, $opt) {
 
         if (!value) return wrap(token.lit, 'null');
 
-        var kw, kwl; // whitespace & comments
-        if (keepWsc) kw = value.__WSC__;
+        var comments, lastComment; // whitespace & comments
+        if (keepWsc) comments = value.__COMMENTS__;
 
         var isArray = Object.prototype.toString.apply(value) === '[object Array]';
 
@@ -802,29 +825,42 @@ module.exports = function($value, $opt) {
 
         var i, length; // loop
         var k, v; // key, value
+        var c, ca;
 
         if (isArray) {
           // The value is an array. Stringify every element. Use null as a placeholder
           // for non-JSON values.
 
           for (i = 0, length = value.length; i < length; i++) {
-            if (kw) partial.push(wsc(kw[i]) + eolGap);
-            partial.push(str(value[i], kw ? testWsc(kw[i + 1]) : false, true) || wrap(token.lit, 'null'));
+            if (comments) {
+              c = comments[i]||[];
+              ca = commentOnThisLine(c[1]) ? c[1] : "";
+              partial.push(makeComment(c[0], "\n") + eolGap);
+            }
+            partial.push(str(value[i], comments ? ca : false, true) || wrap(token.lit, 'null'));
+            if (ca) partial.push(makeComment(ca, " ", true));
           }
-          if (kw) partial.push(wsc(kw[i]) + eolMind);
+
+          if (comments) {
+            if (length === 0) {
+              // when empty
+              c = comments[0];
+              partial.push(makeComment(c[0], "\n") + eolMind);
+            }
+            else partial.push(eolMind);
+          }
 
           // Join all of the elements together, separated with newline, and wrap them in
           // brackets.
 
-          if (kw) v = prefix + wrap(token.arr, partial.join(''));
+          if (comments) v = prefix + wrap(token.arr, partial.join(''));
           else if (partial.length === 0) v = wrap(token.arr, '');
           else v = prefix + wrap(token.arr, eolGap + partial.join(eolGap) + eolMind);
         } else {
           // Otherwise, iterate through all of the keys in the object.
 
-          if (kw) {
-            kwl = wsc(kw.c[""]);
-            var keys=kw.o.slice();
+          if (comments) {
+            var keys = comments.o.slice();
             for (k in value) {
               if (Object.prototype.hasOwnProperty.call(value, k) && keys.indexOf(k) < 0)
                 keys.push(k);
@@ -832,12 +868,21 @@ module.exports = function($value, $opt) {
 
             for (i = 0, length = keys.length; i < length; i++) {
               k = keys[i];
-              partial.push(kwl + eolGap);
-              kwl = wsc(kw.c[k]);
-              v = str(value[k], testWsc(kwl));
+              c = comments.c[k]||[];
+              ca = commentOnThisLine(c[1]) ? c[1] : "";
+              partial.push(makeComment(c[0], "\n") + eolGap);
+
+              v = str(value[k], ca);
               if (v) partial.push(quoteKey(k) + token.col + (startsWithNL(v) ? '' : ' ') + v);
+              if (ca) partial.push(makeComment(ca, " ", true));
             }
-            partial.push(kwl + eolMind);
+            if (length === 0) {
+              // when empty
+              c = comments.c[""];
+              partial.push(makeComment(c[0], "\n") + eolMind);
+            }
+            else partial.push(eolMind);
+
           } else {
             for (k in value) {
               if (Object.prototype.hasOwnProperty.call(value, k)) {
@@ -852,7 +897,7 @@ module.exports = function($value, $opt) {
             v = wrap(token.obj, '');
           } else {
             // and wrap them in braces
-            if (kw) v = prefix + wrap(token.obj, partial.join(''));
+            if (comments) v = prefix + wrap(token.obj, partial.join(''));
             else v = prefix + wrap(token.obj, eolGap + partial.join(eolGap) + eolMind);
           }
         }
@@ -920,11 +965,11 @@ module.exports = function($value, $opt) {
 };
 
 },{"./hjson-common":1,"./hjson-dsf":2}],5:[function(require,module,exports){
-module.exports="2.2.0";
+module.exports="2.3.0";
 
 },{}],6:[function(require,module,exports){
 /*! @preserve
- * Hjson v2.2.0
+ * Hjson v2.3.0
  * http://hjson.org
  *
  * Copyright 2014-2016 Christian Zangl, MIT license

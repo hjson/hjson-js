@@ -4,9 +4,13 @@
 [![NPM version](https://img.shields.io/npm/v/hjson.svg?style=flat-square)](http://www.npmjs.com/package/hjson)
 [![License](https://img.shields.io/github/license/hjson/hjson-js.svg?style=flat-square)](https://github.com/hjson/hjson-js/blob/master/LICENSE)
 
-[Hjson](http://hjson.org), the Human JSON. A configuration file format for humans. Relaxed syntax, fewer mistakes, more comments.
+[Hjson](http://hjson.org), a user interface for JSON
 
 ![Hjson Intro](http://hjson.org/hjson1.gif)
+
+JSON is easy for humans to read and write... in theory. In practice JSON gives us plenty of opportunities to make mistakes without even realizing it.
+
+Hjson is a syntax extension to JSON. It's NOT a proposal to replace JSON or to incorporate it into the JSON spec itself. It's intended to be used like a user interface for humans, to read and edit before passing the JSON data to the machine.
 
 ```Hjson
 {
@@ -138,25 +142,11 @@ You can modify a Hjson file and keep the whitespace & comments intact (round tri
 
 ```
 // parse, keep whitespace and comments
-// (they are stored in a non enumerable __WSC__ member)
+// (they are stored in a non enumerable __COMMENTS__ member)
 var data = Hjson.rt.parse(text);
 
 // modify like you normally would
 data.foo = "text";
-
-// you can also edit comments by accessing __WSC__
-var wsc = data.__WSC__;
-// __WSC__ for objects contains { c: {}, o: [] }
-// - c with the actual comment and
-// - o (array) with the order of the members
-wsc.c.hugo = "just another test";
-wsc.o.splice(2, 0, "hugo");
-data.hugo = "value";
-
-data.arrayWithComments = [ "a" ];
-// __WSC__ for arrays is just an array with the
-// comments ([0] for the space before the elements)
-data.arrayWithComments.__WSC__ = [ "before a", "after a" ];
 
 // convert back to Hjson
 console.log(Hjson.rt.stringify(data));
