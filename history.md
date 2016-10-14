@@ -1,5 +1,7 @@
 # hjson-js History
 
+- v2.3.1
+  - add comments api (merge/extract)
 - v2.3.0
   - improved comment round trip
 - v2.2.0
