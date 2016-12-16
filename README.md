@@ -70,6 +70,7 @@ Options:
   -sl     output the opening brace on the same line (Hjson)
   -noroot omit braces for the root object (Hjson)
   -quote  quote all strings (Hjson)
+  -mltab  emit multiple lines even when the string contains tabs (Hjson)
   -rt     round trip comments (Hjson)
   -nocol  disable colors (Hjson)
 
@@ -114,6 +115,7 @@ This method produces Hjson text from a JavaScript value.
   - *space*: specifies the indentation of nested structures. If it is a number, it will specify the number of spaces to indent at each level. If it is a string (such as '\t' or '&nbsp;'), it contains the characters used to indent at each level.
   - *eol*: specifies the EOL sequence (default is set by Hjson.setEndOfLine())
   - *colors*: boolean, output ascii color codes
+  - *mltabs*: emit multi lines even if the string contains tab characters (default is false)
 
 ### Hjson.endOfLine(), .setEndOfLine(eol)
 

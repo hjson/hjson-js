@@ -30,6 +30,7 @@ if (args["-help"] || args["?"] || args.h) {
   console.error("  (-c | -json=compact)  output as JSON.");
   console.error("  -sl     output the opening brace on the same line (Hjson)");
   console.error("  -quote  quote all strings (Hjson)");
+  console.error("  -mltab  emit multiple lines even when the string contains tabs (Hjson)");
   console.error("  -rt     round trip comments (Hjson)");
   console.error("  -nocol  disable colors (Hjson)");
   console.error("");
@@ -77,6 +78,7 @@ function convert(text) {
     result = Hjson.stringify(obj, {
       bracesSameLine: args.sl,
       quotes: args.quote?"always":"min",
+      mltabs: !!args.mltab,
       keepWsc: args.rt,
       colors: !args.nocol && process.stdout.isTTY,
       dsf: dsf,
