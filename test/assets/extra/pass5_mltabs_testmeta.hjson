@@ -1,5 +1,5 @@
 { 
   options: {
-    mltabs: true
+    multiline: with-tabs
   }
 }

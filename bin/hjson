@@ -78,7 +78,7 @@ function convert(text) {
     result = Hjson.stringify(obj, {
       bracesSameLine: args.sl,
       quotes: args.quote?"always":"min",
-      mltabs: !!args.mltab,
+      multiline: args.mltab?"with-tabs":"std",
       keepWsc: args.rt,
       colors: !args.nocol && process.stdout.isTTY,
       dsf: dsf,
