@@ -29,11 +29,8 @@ function load(file, cr) {
 function test(name, file, isJson, inputCr, outputCr) {
   var text = load(file, inputCr);
   var shouldFail = name.substr(0, 4) === "fail";
-  var mltabs = name.indexOf("mltabs") !== -1;
-  var stringifyOpts;
-  try {
-    stringifyOpts = Hjson.parse(fs.readFileSync(path.join(rootDir, name+"_testmeta.hjson"), "utf8"));
-  } catch (x) {}
+  var metaPath = path.join(rootDir, name+"_testmeta.hjson");
+  var meta = fs.existsSync(metaPath) ? Hjson.parse(fs.readFileSync(metaPath, "utf8")) : {};
   Hjson.setEndOfLine(outputCr?"\r\n":"\n");
 
   try {
@@ -41,7 +38,7 @@ function test(name, file, isJson, inputCr, outputCr) {
 
     if (!shouldFail) {
       var text1 = JSON.stringify(data, null, 2);
-      var hjson1 = Hjson.stringify(data, stringifyOpts ? stringifyOpts.options : { emitRootBraces: true });
+      var hjson1 = Hjson.stringify(data, meta.options||{});
       var result = JSON.parse(load(name+"_result.json", inputCr));
       var text2 = JSON.stringify(result, null, 2);
       var hjson2 = load(name+"_result.hjson", outputCr);
