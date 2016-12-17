@@ -69,6 +69,7 @@ pass2_test.json
 pass3_test.json
 pass4_test.json
 extra/pass5_mltabs_test.json
+extra/separator_test.json
 passSingle_test.hjson
 root_test.hjson
 stringify1_test.hjson
