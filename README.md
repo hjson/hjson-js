@@ -67,12 +67,13 @@ The default is to output as Hjson.
 Options:
   (-j | -json)  output as formatted JSON.
   (-c | -json=compact)  output as JSON.
-  -sl     output the opening brace on the same line (Hjson)
-  -noroot omit braces for the root object (Hjson)
-  -quote  quote all strings (Hjson)
-  -mltab  emit multiple lines even when the string contains tabs (Hjson)
-  -rt     round trip comments (Hjson)
-  -nocol  disable colors (Hjson)
+  -sl         output the opening brace on the same line (Hjson)
+  -noroot     omit braces for the root object (Hjson)
+  -quote      quote all strings (Hjson)
+  -mltab      emit multiple lines even when the string contains tabs (Hjson)
+  -rt         round trip comments (Hjson)
+  -nocol      disable colors (Hjson)
+  -separator  output a comma separator between elements (Hjson)
 
 Domain specific formats are optional extensions to Hjson and can be enabled with the following options:
   +math: support for Inf/inf, -Inf/-inf, Nan/naN and -0
@@ -116,6 +117,7 @@ This method produces Hjson text from a JavaScript value.
   - *eol*: specifies the EOL sequence (default is set by Hjson.setEndOfLine())
   - *colors*: boolean, output ascii color codes
   - *mltabs*: emit multi lines even if the string contains tab characters (default is false)
+  - *separator*: boolean, output a comma separator between elements. Default false
 
 ### Hjson.endOfLine(), .setEndOfLine(eol)
 
