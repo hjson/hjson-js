@@ -12,7 +12,9 @@ function failErr(name, type, s1, s2, msg) {
   msg=msg||"  "+name+" "+type+" FAILED!";
   console.log(msg);
   if (s1 || s2) {
-    console.log("--- actual:");
+    var i=0;
+    while (i<s1.length && s1[i]===s2[i]) i++;
+    console.log("--- actual (diff at "+i+";"+s1[i].charCodeAt(0)+":"+s2[i].charCodeAt(0)+"):");
     console.log(s1);
     console.log("--- expected:");
     console.log(s2);
@@ -37,15 +39,16 @@ function test(name, file, isJson, inputCr, outputCr) {
     var data = Hjson.parse(text);
 
     if (!shouldFail) {
-      var text1 = JSON.stringify(data, null, 2);
-      var hjson1 = Hjson.stringify(data, meta.options);
-      var result = JSON.parse(load(name+"_result.json", inputCr));
-      var text2 = JSON.stringify(result, null, 2);
-      var hjson2 = load(name+"_result.hjson", outputCr);
-      if (text1 !== text2) failErr(name, "parse", text1, text2);
-      if (hjson1 !== hjson2) failErr(name, "stringify", hjson1, hjson2);
+      var jsonFromData = JSON.stringify(data, null, 2);
+      var hjsonFromData = Hjson.stringify(data, meta.options);
+      var jsonResultRaw = load(name+"_result.json", inputCr);
+      var jsonResult = JSON.stringify(JSON.parse(jsonResultRaw), null, 2);
+      var hjsonResult = load(name+"_result.hjson", outputCr);
+      if (jsonFromData !== jsonResult) failErr(name, "parse", jsonFromData, jsonResult);
+      if (hjsonFromData !== hjsonResult) failErr(name, "stringify", hjsonFromData, hjsonResult);
+      if (!inputCr && !outputCr && jsonResultRaw !== jsonResult) failErr(name, "json-input", jsonResultRaw, jsonResult);
       if (isJson) {
-        // also compare Hjson.parse to JSON.parse
+        // if the input is JSON we can also compare Hjson.parse to JSON.parse
         var json1 = JSON.stringify(data), json2 = JSON.stringify(JSON.parse(text));
         if (json1 !== json2) failErr(name, "json chk", json1, json2);
       }
@@ -77,3 +80,4 @@ tests.forEach(function(file) {
 
 console.log(success?"ALL OK!":"FAIL!");
 process.exit(success?0:1);
+
