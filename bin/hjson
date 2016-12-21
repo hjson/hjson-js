@@ -30,7 +30,7 @@ if (args["-help"] || args["?"] || args.h) {
   console.error("  (-c | -json=compact)  output as JSON.");
   console.error("  -sl         output the opening brace on the same line (Hjson)");
   console.error("  -quote      quote all strings (Hjson)");
-  console.error("  -mltab      emit multiple lines even when the string contains tabs (Hjson)");
+  console.error("  -mltab      emit multiple lines even when the string contains tabs (Hjson, true by default)");
   console.error("  -rt         round trip comments (Hjson)");
   console.error("  -nocol      disable colors (Hjson)");
   console.error("  -separator  output a comma separator between elements (Hjson)");
