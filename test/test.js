@@ -38,7 +38,7 @@ function test(name, file, isJson, inputCr, outputCr) {
 
     if (!shouldFail) {
       var text1 = JSON.stringify(data, null, 2);
-      var hjson1 = Hjson.stringify(data, meta.options||{});
+      var hjson1 = Hjson.stringify(data, meta.options);
       var result = JSON.parse(load(name+"_result.json", inputCr));
       var text2 = JSON.stringify(result, null, 2);
       var hjson2 = load(name+"_result.hjson", outputCr);
