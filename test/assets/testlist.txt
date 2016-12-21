@@ -72,6 +72,11 @@ extra/pass5_mltabs_test.json
 extra/separator_test.json
 passSingle_test.hjson
 root_test.hjson
-stringify1_test.hjson
+stringify/1_test.hjson
+stringify/quotes_keys_test.hjson
+stringify/quotes_strings_test.hjson
+stringify/quotes_always_test.hjson
+stringify/quotes_all_test.hjson
+stringify/quotes_strings_ml_test.json
 strings_test.hjson
 trail_test.hjson
