@@ -10,3 +10,6 @@ node_js:
   - "0.11"
   - "0.10"
   - iojs
+script:
+  - npm install
+  - npm run build

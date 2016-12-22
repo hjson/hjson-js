@@ -161,7 +161,11 @@ data.foo = "text";
 // convert back to Hjson
 console.log(Hjson.rt.stringify(data));
 ```
+# Build
+
+To run all tests and create the bundle output, first install the dev dependencies with `npm i` and then run `npm run build`.
 
 # History
 
 [see history.md](history.md)
+

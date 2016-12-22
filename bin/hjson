@@ -52,15 +52,15 @@ if (args["+math"]) dsf.push(Hjson.dsf.math());
 if (args["+date"]) dsf.push(Hjson.dsf.date({free:false}));
 if (args["+hex"]) dsf.push(Hjson.dsf.hex({out:false}));
 
+var text;
 if (argv.length) {
-  var text=fs.readFileSync(argv[0], "utf8");
+  text=fs.readFileSync(argv[0], "utf8");
   convert(text);
 }
-
 else {
   var stdin = process.openStdin();
   stdin.setEncoding('utf-8');
-  var text = '';
+  text = '';
   stdin.on('data', function(chunk) { text += chunk; });
   stdin.on('end', function() { convert(text); });
 }
@@ -92,3 +92,4 @@ function convert(text) {
 
   process.stdout.write(result + os.EOL);
 }
+
