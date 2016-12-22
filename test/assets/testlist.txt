@@ -63,6 +63,7 @@ failStr6c_test.hjson
 failStr6d_test.hjson
 kan_test.hjson
 keys_test.hjson
+mltabs_test.json
 oa_test.hjson
 pass1_test.json
 pass2_test.json
@@ -78,5 +79,5 @@ stringify/quotes_always_test.hjson
 stringify/quotes_keys_test.hjson
 stringify/quotes_strings_ml_test.json
 stringify/quotes_strings_test.hjson
-extra/pass5_mltabs_test.json
+extra/notabs_test.json
 extra/separator_test.json

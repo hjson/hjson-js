@@ -4,7 +4,9 @@ var fs = require("fs");
 var path = require("path");
 var rootDir = path.normalize(path.join(__dirname, "assets"));
 
-var argv=process.argv.slice(2)
+var args={}, argv=[];
+process.argv.slice(2).forEach(function(x) { if (x[0]==="-") { var i=x.indexOf("="); args[x.substr(1, i>0?i-1:undefined)]=i>0?x.substr(i+1):true; } else argv.push(x); });
+
 var filter=argv[0];
 var success=true;
 
@@ -14,10 +16,12 @@ function failErr(name, type, s1, s2, msg) {
   if (s1 || s2) {
     var i=0;
     while (i<s1.length && s1[i]===s2[i]) i++;
-    console.log("--- actual (diff at "+i+";"+s1[i].charCodeAt(0)+":"+s2[i].charCodeAt(0)+"):");
+    console.log("--- actual (diff at "+i+";"+(s1[i]||'').charCodeAt(0)+":"+(s2[i]||'').charCodeAt(0)+"):");
     console.log(s1);
     console.log("--- expected:");
     console.log(s2);
+    if (args.dump)
+      fs.writeFileSync(args.dump, s1, "utf8");
   }
   success=false;
 }
@@ -44,20 +48,21 @@ function test(name, file, isJson, inputCr, outputCr) {
       var jsonResultRaw = load(name+"_result.json", inputCr);
       var jsonResult = JSON.stringify(JSON.parse(jsonResultRaw), null, 2);
       var hjsonResult = load(name+"_result.hjson", outputCr);
-      if (jsonFromData !== jsonResult) failErr(name, "parse", jsonFromData, jsonResult);
-      if (hjsonFromData !== hjsonResult) failErr(name, "stringify", hjsonFromData, hjsonResult);
-      if (!inputCr && !outputCr && jsonResultRaw !== jsonResult) failErr(name, "json-input", jsonResultRaw, jsonResult);
+      if (jsonFromData !== jsonResult) return failErr(name, "parse", jsonFromData, jsonResult);
+      if (hjsonFromData !== hjsonResult) return failErr(name, "stringify", hjsonFromData, hjsonResult);
+      if (!inputCr && !outputCr && jsonResultRaw !== jsonResult) return failErr(name, "json-input", jsonResultRaw, jsonResult);
       if (isJson) {
         // if the input is JSON we can also compare Hjson.parse to JSON.parse
         var json1 = JSON.stringify(data), json2 = JSON.stringify(JSON.parse(text));
-        if (json1 !== json2) failErr(name, "json chk", json1, json2);
+        if (json1 !== json2) return failErr(name, "json chk", json1, json2);
       }
     }
-    else failErr(name, null, null, null, "  should fail but succeeded");
+    else return failErr(name, null, null, null, "  should fail but succeeded");
   }
   catch (err) {
-    if (!shouldFail) failErr(name, "exception", err.toString(), "");
+    if (!shouldFail) return failErr(name, "exception", err.toString(), "");
   }
+  return true;
 }
 
 console.log("running tests...");
@@ -72,9 +77,9 @@ tests.forEach(function(file) {
   if (filter && name.indexOf(filter) < 0) return; // ignore
 
   console.log("- "+name);
-  test(name, file, isJson, false, false);
-  test(name, file, isJson, false, true);
-  test(name, file, isJson, true, false);
+  test(name, file, isJson, false, false) &&
+  test(name, file, isJson, false, true) &&
+  test(name, file, isJson, true, false) &&
   test(name, file, isJson, true, true);
 });
 

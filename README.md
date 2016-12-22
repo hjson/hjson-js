@@ -67,13 +67,14 @@ The default is to output as Hjson.
 Options:
   (-j | -json)  output as formatted JSON.
   (-c | -json=compact)  output as JSON.
-  -sl         output the opening brace on the same line (Hjson)
-  -noroot     omit braces for the root object (Hjson)
-  -quote      quote all strings (Hjson)
-  -mltab      emit multiple lines even when the string contains tabs (Hjson, true by default)
-  -rt         round trip comments (Hjson)
-  -nocol      disable colors (Hjson)
-  -separator  output a comma separator between elements (Hjson)
+Options for Hjson output:
+  -sl         output the opening brace on the same line
+  -quote      quote all strings
+  -quote=all  quote keys as well
+  -js         output in JavaScript/JSON compatible format
+              can be used with -rt and // comments
+  -rt         round trip comments
+  -nocol      disable colors
 
 Domain specific formats are optional extensions to Hjson and can be enabled with the following options:
   +math: support for Inf/inf, -Inf/-inf, Nan/naN and -0
@@ -110,18 +111,19 @@ This method produces Hjson text from a JavaScript value.
   - *keepWsc*: boolean, keep white space. See parse.
   - *bracesSameLine*: boolean, makes braces appear on the same line as the key name. Default false.
   - *emitRootBraces*: boolean, show braces for the root object. Default true.
-  - *quotes*: string, controls how strings are displayed.
+  - *quotes*: string, controls how strings are displayed. (setting separator implies "strings")
     - "min": no quotes whenever possible (default)
     - "keys": use quotes around keys
     - "strings": use quotes around string values
     - "all": use quotes around keys and string values
+  - *multiline*: string, controls how multiline strings are displayed. (setting quotes implies "off")
+    - "std": strings containing \n are shown in multiline format (default)
+    - "no-tabs": like std but disallow tabs
+    - "off": show in JSON format
+  - *separator*: boolean, output a comma separator between elements. Default false
   - *space*: specifies the indentation of nested structures. If it is a number, it will specify the number of spaces to indent at each level. If it is a string (such as '\t' or '&nbsp;'), it contains the characters used to indent at each level.
   - *eol*: specifies the EOL sequence (default is set by Hjson.setEndOfLine())
   - *colors*: boolean, output ascii color codes
-  - *multiline*: controls how multiline strings are displayed.
-    - "std": strings containing \n are shown ml
-    - "with-tabs": like std but allow tabs (default)
-  - *separator*: boolean, output a comma separator between elements. Default false
 
 ### Hjson.endOfLine(), .setEndOfLine(eol)
 
