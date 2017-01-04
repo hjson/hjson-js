@@ -897,6 +897,22 @@ module.exports = function(data, opt) {
   var multiline = 1; // std=1, no-tabs=2, off=0
   var separator = ''; // comma separator
   var dsfDef = null;
+  var token = {
+    obj:  [ '{', '}' ],
+    arr:  [ '[', ']' ],
+    key:  [ '',  '' ],
+    qkey: [ '"', '"' ],
+    col:  [ ':' ],
+    str:  [ '', '' ],
+    qstr: [ '"', '"' ],
+    mstr: [ "'''", "'''" ],
+    num:  [ '', '' ],
+    lit:  [ '', '' ],
+    dsf:  [ '', '' ],
+    esc:  [ '\\', '' ],
+    uni:  [ '\\u', '' ],
+    rem:  [ '', '' ],
+  };
 
   if (opt && typeof opt === 'object') {
     opt.quotes = opt.quotes === 'always' ? 'strings' : opt.quotes; // legacy
@@ -922,8 +938,8 @@ module.exports = function(data, opt) {
 
     if (opt.colors === true) {
       token = {
-        obj:  [ '\x1b[30;1m{\x1b[0m', '\x1b[30;1m}\x1b[0m' ],
-        arr:  [ '\x1b[30;1m[\x1b[0m', '\x1b[30;1m]\x1b[0m' ],
+        obj:  [ '\x1b[37m{\x1b[0m', '\x1b[37m}\x1b[0m' ],
+        arr:  [ '\x1b[37m[\x1b[0m', '\x1b[37m]\x1b[0m' ],
         key:  [ '\x1b[33m',  '\x1b[0m' ],
         qkey: [ '\x1b[33m"', '"\x1b[0m' ],
         col:  [ '\x1b[37m:\x1b[0m' ],
@@ -935,7 +951,7 @@ module.exports = function(data, opt) {
         dsf:  [ '\x1b[37m', '\x1b[0m' ],
         esc:  [ '\x1b[31m\\', '\x1b[0m' ],
         uni:  [ '\x1b[31m\\u', '\x1b[0m' ],
-        rem:  [ '\x1b[30;1m', '\x1b[0m' ],
+        rem:  [ '\x1b[35m', '\x1b[0m' ],
       };
     }
   }
@@ -964,22 +980,6 @@ module.exports = function(data, opt) {
   };
   var needsEscapeName = /[,\{\[\}\]\s:#"]|\/\/|\/\*|'''/;
   var gap = '';
-  var token = {
-    obj:  [ '{', '}' ],
-    arr:  [ '[', ']' ],
-    key:  [ '',  '' ],
-    qkey: [ '"', '"' ],
-    col:  [ ':' ],
-    str:  [ '', '' ],
-    qstr: [ '"', '"' ],
-    mstr: [ "'''", "'''" ],
-    num:  [ '', '' ],
-    lit:  [ '', '' ],
-    dsf:  [ '', '' ],
-    esc:  [ '\\', '' ],
-    uni:  [ '\\u', '' ],
-    rem:  [ '', '' ],
-  };
 
   function wrap(tk, v) { return tk[0] + v + tk[1]; }
 
@@ -1213,11 +1213,11 @@ module.exports = function(data, opt) {
 };
 
 },{"./hjson-common":2,"./hjson-dsf":3}],6:[function(require,module,exports){
-module.exports="2.4.0";
+module.exports="2.4.1";
 
 },{}],7:[function(require,module,exports){
 /*! @preserve
- * Hjson v2.4.0
+ * Hjson v2.4.1
  * http://hjson.org
  *
  * Copyright 2014-2016 Christian Zangl, MIT license

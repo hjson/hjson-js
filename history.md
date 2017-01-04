@@ -1,5 +1,7 @@
 # hjson-js History
 
+- v2.4.1
+  - fix tty colors
 - v2.4.0
   - new stringify options:
     - quotes for keys and strings (SamVerschueren)
