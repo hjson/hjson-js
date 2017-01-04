@@ -314,8 +314,6 @@ module.exports = {
 /* jslint node: true */
 "use strict";
 
-var common = require("./hjson-common");
-
 function loadDsf(col, type) {
 
   if (Object.prototype.toString.apply(col) !== '[object Array]') {
@@ -361,7 +359,7 @@ function runDsf(dsf, value) {
   }
 }
 
-function nopDsf(value) {
+function nopDsf(/*value*/) {
 }
 
 function isInvalidDsfChar(c) {
@@ -369,7 +367,7 @@ function isInvalidDsfChar(c) {
 }
 
 
-function math(opt) {
+function math(/*opt*/) {
   return {
     name: "math",
     parse: function (value) {
@@ -411,7 +409,7 @@ function hex(opt) {
 }
 hex.description="parse hexadecimal numbers prefixed with 0x";
 
-function date(opt) {
+function date(/*opt*/) {
   return {
     name: "date",
     parse: function (value) {
@@ -441,12 +439,12 @@ module.exports = {
   },
 };
 
-},{"./hjson-common":2}],4:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /* Hjson http://hjson.org */
 /* jslint node: true */
 "use strict";
 
-module.exports = function($source, $opt) {
+module.exports = function(source, opt) {
 
   var common = require("./hjson-common");
   var dsf = require("./hjson-dsf");
@@ -539,7 +537,7 @@ module.exports = function($source, $opt) {
 
     // we are at ''' +1 - get indent
     var indent = 0;
-    while (true) {
+    for (;;) {
       var c=peek(-indent-5);
       if (!c || c === '\n') break;
       indent++;
@@ -555,7 +553,7 @@ module.exports = function($source, $opt) {
     if (ch === '\n') { next(); skipIndent(); }
 
     // When parsing multiline string values, we must look for ' characters.
-    while (true) {
+    for (;;) {
       if (!ch) {
         error("Bad multiline string");
       } else if (ch === '\'') {
@@ -589,7 +587,7 @@ module.exports = function($source, $opt) {
     if (ch === '"') return string();
 
     var name = "", start = at, space = -1;
-    while (true) {
+    for (;;) {
       if (ch === ':') {
         if (!name) error("Found ':' but no key name (for an empty key name use quotes)");
         else if (space >=0 && space !== name.length) { at = start + space; error("Found whitespace in your key name (use quotes to include)"); }
@@ -867,20 +865,16 @@ module.exports = function($source, $opt) {
     }
   }
 
-  function hjsonParse(source, opt) {
-    if (typeof source!=="string") throw new Error("source is not a string");
-    var dsfDef = null;
-    if (opt && typeof opt === 'object') {
-      keepComments = opt.keepWsc;
-      dsfDef = opt.dsf;
-    }
-    runDsf = dsf.loadDsf(dsfDef, "parse");
-    text = source;
-    resetAt();
-    return rootValue();
+  if (typeof source!=="string") throw new Error("source is not a string");
+  var dsfDef = null;
+  if (opt && typeof opt === 'object') {
+    keepComments = opt.keepWsc;
+    dsfDef = opt.dsf;
   }
-
-  return hjsonParse($source, $opt);
+  runDsf = dsf.loadDsf(dsfDef, "parse");
+  text = source;
+  resetAt();
+  return rootValue();
 };
 
 },{"./hjson-common":2,"./hjson-dsf":3}],5:[function(require,module,exports){
@@ -888,23 +882,78 @@ module.exports = function($source, $opt) {
 /* jslint node: true */
 "use strict";
 
-module.exports = function($value, $opt) {
+module.exports = function(data, opt) {
 
   var common = require("./hjson-common");
   var dsf = require("./hjson-dsf");
 
+  // options
+  var eol = common.EOL;
+  var indent = '  ';
+  var keepComments = false;
+  var bracesSameLine = false;
+  var quoteKeys = false;
+  var quoteStrings = false;
+  var multiline = 1; // std=1, no-tabs=2, off=0
+  var separator = ''; // comma separator
+  var dsfDef = null;
+
+  if (opt && typeof opt === 'object') {
+    opt.quotes = opt.quotes === 'always' ? 'strings' : opt.quotes; // legacy
+
+    if (opt.eol === '\n' || opt.eol === '\r\n') eol = opt.eol;
+    keepComments = opt.keepWsc;
+    bracesSameLine = opt.bracesSameLine;
+    quoteKeys = opt.quotes === 'all' || opt.quotes === 'keys';
+    quoteStrings = opt.quotes === 'all' || opt.quotes === 'strings' || opt.separator === true;
+    if (quoteStrings || opt.multiline == 'off') multiline = 0;
+    else multiline = opt.multiline == 'no-tabs' ? 2 : 1;
+    separator = opt.separator === true ? ',' : '';
+    dsfDef = opt.dsf;
+
+    // If the space parameter is a number, make an indent string containing that
+    // many spaces. If it is a string, it will be used as the indent string.
+
+    if (typeof opt.space === 'number') {
+      indent = new Array(opt.space + 1).join(' ');
+    } else if (typeof opt.space === 'string') {
+      indent = opt.space;
+    }
+
+    if (opt.colors === true) {
+      token = {
+        obj:  [ '\x1b[30;1m{\x1b[0m', '\x1b[30;1m}\x1b[0m' ],
+        arr:  [ '\x1b[30;1m[\x1b[0m', '\x1b[30;1m]\x1b[0m' ],
+        key:  [ '\x1b[33m',  '\x1b[0m' ],
+        qkey: [ '\x1b[33m"', '"\x1b[0m' ],
+        col:  [ '\x1b[37m:\x1b[0m' ],
+        str:  [ '\x1b[37;1m', '\x1b[0m' ],
+        qstr: [ '\x1b[37;1m"', '"\x1b[0m' ],
+        mstr: [ "\x1b[37;1m'''", "'''\x1b[0m" ],
+        num:  [ '\x1b[36;1m', '\x1b[0m' ],
+        lit:  [ '\x1b[36m', '\x1b[0m' ],
+        dsf:  [ '\x1b[37m', '\x1b[0m' ],
+        esc:  [ '\x1b[31m\\', '\x1b[0m' ],
+        uni:  [ '\x1b[31m\\u', '\x1b[0m' ],
+        rem:  [ '\x1b[30;1m', '\x1b[0m' ],
+      };
+    }
+  }
+
+  //
   var runDsf; // domain specific formats
 
+  var commonRange='\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff';
   // needsEscape tests if the string can be written without escapes
-  var needsEscape = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
-  // needsQuotes tests if the string can be written as a quoteless string (includes needsEscape but without \\ and \")
-  var needsQuotes = /^\s|^"|^'''|^#|^\/\*|^\/\/|^\{|^\}|^\[|^\]|^:|^,|\s$|[\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
-  // needsEscapeML tests if the string can be written as a multiline string (includes needsEscape but without \n, \r, \\ and \")
-  var needsEscapeML = /'''|[\x00-\x09\x0b\x0c\x0e-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
+  var needsEscape = new RegExp('[\\\\\\"\x00-\x1f'+commonRange+']', 'g');
+  // needsQuotes tests if the string can be written as a quoteless string (like needsEscape but without \\ and \")
+  var needsQuotes = new RegExp('^\\s|^"|^\'\'\'|^#|^\\/\\*|^\\/\\/|^\\{|^\\}|^\\[|^\\]|^:|^,|\\s$|[\x00-\x1f'+commonRange+']', 'g');
+  // needsEscapeML tests if the string can be written as a multiline string (like needsEscape but without \n, \r, \\, \", \t unless multines is 'std')
+  var needsEscapeML = new RegExp('\'\'\'|^[\\s]+$|[\x00-'+(multiline === 2 ? '\x09' : '\x08')+'\x0b\x0c\x0e-\x1f'+commonRange+']', 'g');
   // starts with a keyword and optionally is followed by a comment
-  var startsWithKeyword = /^(true|false|null)\s*((,|\]|\}|#|\/\/|\/\*).*)?$/;
-  var meta =
-  {  // table of character substitutions
+  var startsWithKeyword = new RegExp('^(true|false|null)\\s*((,|\\]|\\}|#|//|/\\*).*)?$');
+  var meta = {
+    // table of character substitutions
     '\b': 'b',
     '\t': 't',
     '\n': 'n',
@@ -915,9 +964,6 @@ module.exports = function($value, $opt) {
   };
   var needsEscapeName = /[,\{\[\}\]\s:#"]|\/\/|\/\*|'''/;
   var gap = '';
-  var indent = '  ';
-  // options
-  var eol, keepComments, bracesSameLine, quoteAlways;
   var token = {
     obj:  [ '{', '}' ],
     arr:  [ '[', ']' ],
@@ -954,7 +1000,7 @@ module.exports = function($value, $opt) {
     // Check if we can insert this string without quotes
     // see hjson syntax (must not parse as true, false, null or number)
 
-    if (quoteAlways || hasComment ||
+    if (quoteStrings || hasComment ||
       needsQuotes.test(string) ||
       common.tryParseNumber(string, true) !== undefined ||
       startsWithKeyword.test(string)) {
@@ -968,7 +1014,7 @@ module.exports = function($value, $opt) {
       needsEscape.lastIndex = 0;
       needsEscapeML.lastIndex = 0;
       if (!needsEscape.test(string)) return wrap(token.qstr, string);
-      else if (!needsEscapeML.test(string) && !isRootObject) return mlString(string, gap);
+      else if (!needsEscapeML.test(string) && !isRootObject && multiline) return mlString(string, gap);
       else return wrap(token.qstr, quoteReplace(string));
     } else {
       // return without quotes
@@ -1002,7 +1048,7 @@ module.exports = function($value, $opt) {
 
     // Check if we can insert this key without quotes
 
-    if (needsEscapeName.test(name)) {
+    if (quoteKeys || needsEscapeName.test(name)) {
       needsEscape.lastIndex = 0;
       return wrap(token.qkey, needsEscape.test(name) ? quoteReplace(name) : name);
     } else {
@@ -1079,7 +1125,7 @@ module.exports = function($value, $opt) {
               ca = commentOnThisLine(c[1]);
               partial.push(makeComment(c[0], "\n") + eolGap);
             }
-            partial.push(str(value[i], comments ? ca : false, true) || wrap(token.lit, 'null'));
+            partial.push(str(value[i], comments ? ca : false, true) + (i < length -1 ? separator : '') || wrap(token.lit, 'null'));
             if (comments && c[1]) partial.push(makeComment(c[1], ca ? " " : "\n", ca));
           }
 
@@ -1099,9 +1145,10 @@ module.exports = function($value, $opt) {
           else v = prefix + wrap(token.arr, eolGap + partial.join(eolGap) + eolMind);
         } else {
           // Otherwise, iterate through all of the keys in the object.
+          var keys;
 
           if (comments) {
-            var keys = comments.o.slice();
+            keys = comments.o.slice();
             for (k in value) {
               if (Object.prototype.hasOwnProperty.call(value, k) && keys.indexOf(k) < 0)
                 keys.push(k);
@@ -1114,7 +1161,7 @@ module.exports = function($value, $opt) {
               partial.push(makeComment(c[0], "\n") + eolGap);
 
               v = str(value[k], ca);
-              if (v) partial.push(quoteKey(k) + token.col + (startsWithNL(v) ? '' : ' ') + v);
+              if (v) partial.push(quoteKey(k) + token.col + (startsWithNL(v) ? '' : ' ') + v + (i < length - 1 ? separator : ''));
               if (comments && c[1]) partial.push(makeComment(c[1], ca ? " " : "\n", ca));
             }
             if (length === 0) {
@@ -1124,10 +1171,13 @@ module.exports = function($value, $opt) {
             else partial.push(eolMind);
 
           } else {
-            for (k in value) {
+            keys = Object.keys(value);
+
+            for (i = 0, length = keys.length; i < length; i++) {
+              k = keys[i];
               if (Object.prototype.hasOwnProperty.call(value, k)) {
                 v = str(value[k]);
-                if (v) partial.push(quoteKey(k) + token.col + (startsWithNL(v) ? '' : ' ') + v);
+                if (v) partial.push(quoteKey(k) + token.col + (startsWithNL(v) ? '' : ' ') + v + (i < length - 1 ? separator : ''));
               }
             }
           }
@@ -1147,77 +1197,27 @@ module.exports = function($value, $opt) {
     }
   }
 
-  function hjsonStringify(value, opt) {
-    var i, space;
-    var dsfDef = null;
 
-    eol = common.EOL;
-    indent = '  ';
-    keepComments = false;
-    bracesSameLine = false;
-    quoteAlways = false;
+  runDsf = dsf.loadDsf(dsfDef, 'stringify');
 
-    if (opt && typeof opt === 'object') {
-      if (opt.eol === '\n' || opt.eol === '\r\n') eol = opt.eol;
-      space = opt.space;
-      keepComments = opt.keepWsc;
-      bracesSameLine = opt.bracesSameLine;
-      quoteAlways = opt.quotes === 'always';
-      dsfDef = opt.dsf;
+  var res = "";
+  var comments = keepComments ? comments = (common.getComment(data) || {}).r : null;
+  if (comments && comments[0]) res = comments[0] + '\n';
 
-      if (opt.colors === true) {
-        token = {
-          obj:  [ '\x1b[30;1m{\x1b[0m', '\x1b[30;1m}\x1b[0m' ],
-          arr:  [ '\x1b[30;1m[\x1b[0m', '\x1b[30;1m]\x1b[0m' ],
-          key:  [ '\x1b[33m',  '\x1b[0m' ],
-          qkey: [ '\x1b[33m"', '"\x1b[0m' ],
-          col:  [ '\x1b[37m:\x1b[0m' ],
-          str:  [ '\x1b[37;1m', '\x1b[0m' ],
-          qstr: [ '\x1b[37;1m"', '"\x1b[0m' ],
-          mstr: [ "\x1b[37;1m'''", "'''\x1b[0m" ],
-          num:  [ '\x1b[36;1m', '\x1b[0m' ],
-          lit:  [ '\x1b[36m', '\x1b[0m' ],
-          dsf:  [ '\x1b[37m', '\x1b[0m' ],
-          esc:  [ '\x1b[31m\\', '\x1b[0m' ],
-          uni:  [ '\x1b[31m\\u', '\x1b[0m' ],
-          rem:  [ '\x1b[30;1m', '\x1b[0m' ],
-        };
-      }
-    }
+  // get the result of stringifying the data.
+  res += str(data, null, true, true);
 
-    runDsf = dsf.loadDsf(dsfDef, 'stringify');
+  if (comments) res += comments[1]||"";
 
-    // If the space parameter is a number, make an indent string containing that
-    // many spaces. If it is a string, it will be used as the indent string.
-
-    if (typeof space === 'number') {
-      indent = '';
-      for (i = 0; i < space; i++) indent += ' ';
-    } else if (typeof space === 'string') {
-      indent = space;
-    }
-
-    var res = "";
-    var comments = keepComments ? comments = (common.getComment(value) || {}).r : null;
-    if (comments && comments[0]) res = comments[0] + '\n';
-
-    // get the result of stringifying the value.
-    res += str(value, null, true, true);
-
-    if (comments) res += comments[1]||"";
-
-    return res;
-  }
-
-  return hjsonStringify($value, $opt);
+  return res;
 };
 
 },{"./hjson-common":2,"./hjson-dsf":3}],6:[function(require,module,exports){
-module.exports="2.3.1";
+module.exports="2.4.0";
 
 },{}],7:[function(require,module,exports){
 /*! @preserve
- * Hjson v2.3.1
+ * Hjson v2.4.0
  * http://hjson.org
  *
  * Copyright 2014-2016 Christian Zangl, MIT license
@@ -1263,8 +1263,20 @@ module.exports="2.3.1";
                     obsolete: will always emit braces
 
         quotes      string, controls how strings are displayed.
+                    setting separator implies "strings"
                     "min"     - no quotes whenever possible (default)
-                    "always"  - always use quotes
+                    "keys"    - use quotes around keys
+                    "strings" - use quotes around string values
+                    "all"     - use quotes around keys and string values
+
+        multiline   string, controls how multiline strings are displayed.
+                    setting quotes implies "off"
+                    "std"     - strings containing \n are shown in
+                                multiline format (default)
+                    "no-tabs" - like std but disallow tabs
+                    "off"     - show in JSON format
+
+        separator   boolean, output a comma separator between elements. Default false.
 
         space       specifies the indentation of nested structures. If it is
                     a number, it will specify the number of spaces to indent

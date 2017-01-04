@@ -1,5 +1,10 @@
 # hjson-js History
 
+- v2.4.0
+  - new stringify options:
+    - quotes for keys and strings (SamVerschueren)
+    - comma separator (SamVerschueren)
+    - multiline strings output (hmalphettes)
 - v2.3.1
   - add comments api (merge/extract)
 - v2.3.0
