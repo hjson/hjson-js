@@ -21,8 +21,8 @@
     "lint": "node_modules/eslint/bin/eslint.js -f unix bin/hjson lib/*.js",
     "build_v1": "node -e 'console.log(\"module.exports=\\\"\"+eval(\"(\"+process.argv[1]+\")\").version+\"\\\";\");' -- \"`cat package.json`\" > lib/hjson-version.js",
     "build_v2": "node -e 'var v=\" * Hjson v\"+eval(\"(\"+process.argv[1]+\")\").version; if (v!==process.argv[2]) throw new Error(\"ver\");' -- \"`cat package.json`\" \"`grep -E '\\* Hjson v.*$' lib/hjson.js`\"",
-    "build_bundle": "node_modules/browserify/bin/cmd.js lib/hjson.js --ignore os -s Hjson -o bundle/hjson.js",
-    "build_min": "node node_modules/uglify-js/bin/uglifyjs bundle/hjson.js --comments -c -m -o bundle/hjson.min.js",
+    "build_bundle": "node_modules/browserify/bin/cmd.js -p browserify-header --ignore os -s Hjson -o bundle/hjson.js lib/hjson.js",
+    "build_min": "node node_modules/uglify-js/bin/uglifyjs bundle/hjson.js --comments=/^!/ -c -m -o bundle/hjson.min.js",
     "build": "npm run build_v1 && npm run build_v2 && npm run test && npm run lint && npm run build_bundle && npm run build_min"
   },
   "homepage": "http://hjson.org",
@@ -35,8 +35,9 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "browserify": "^13.1.1",
-    "eslint": "^3.12.2",
-    "uglify-js": "^2.4.24"
+    "browserify": "^13.3.0",
+    "browserify-header": "0.9.2",
+    "eslint": "^3.13.1",
+    "uglify-js": "^2.7.5"
   }
 }
