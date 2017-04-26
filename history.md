@@ -1,5 +1,7 @@
 # hjson-js History
 
+- v2.4.2
+  - add error hint for incorrect single quotes
 - v2.4.1
   - fix tty colors
 - v2.4.0
