@@ -1,5 +1,7 @@
 # hjson-js History
 
+- v2.4.3
+  - fix throw error on string containing newline
 - v2.4.2
   - add error hint for incorrect single quotes
 - v2.4.1
