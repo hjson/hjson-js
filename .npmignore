@@ -3,3 +3,4 @@ _*
 .travis.yml
 sample/
 coverage/
+test/
