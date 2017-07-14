@@ -1,5 +1,5 @@
 /*!
- * Hjson v3.0.0
+ * Hjson v3.0.1
  * http://hjson.org
  *
  * Copyright 2014-2017 Christian Zangl, MIT license
@@ -862,6 +862,16 @@ module.exports = function(source, opt) {
   }
 
   function rootValue() {
+    white();
+    var c = keepComments ? getComment(1) : null;
+    switch (ch) {
+      case '{': return checkTrailing(object(), c);
+      case '[': return checkTrailing(array(), c);
+      default: return checkTrailing(value(), c);
+    }
+  }
+
+  function legacyRootValue() {
     // Braces for the root object are optional
     white();
     var c = keepComments ? getComment(1) : null;
@@ -883,14 +893,16 @@ module.exports = function(source, opt) {
 
   if (typeof source!=="string") throw new Error("source is not a string");
   var dsfDef = null;
+  var legacyRoot = true;
   if (opt && typeof opt === 'object') {
     keepComments = opt.keepWsc;
     dsfDef = opt.dsf;
+    legacyRoot = opt.legacyRoot !== false; // default true
   }
   runDsf = dsf.loadDsf(dsfDef, "parse");
   text = source;
   resetAt();
-  return rootValue();
+  return legacyRoot ? legacyRootValue() : rootValue();
 };
 
 },{"./hjson-common":2,"./hjson-dsf":3}],5:[function(require,module,exports){
@@ -1228,11 +1240,11 @@ module.exports = function(data, opt) {
 };
 
 },{"./hjson-common":2,"./hjson-dsf":3}],6:[function(require,module,exports){
-module.exports="3.0.0";
+module.exports="3.0.1";
 
 },{}],7:[function(require,module,exports){
 /*!
- * Hjson v3.0.0
+ * Hjson v3.0.1
  * http://hjson.org
  *
  * Copyright 2014-2017 Christian Zangl, MIT license
@@ -1256,6 +1268,8 @@ module.exports="3.0.0";
                     preserving comments (default false)
 
         dsf         array of DSF (see Hjson.dsf)
+
+        legacyRoot  boolean, support omitting root braces (default true)
       }
 
       This method parses Hjson text to produce an object or array.

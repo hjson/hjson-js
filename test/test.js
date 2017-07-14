@@ -9,6 +9,7 @@ process.argv.slice(2).forEach(function(x) { if (x[0]==="-") { var i=x.indexOf("=
 
 var filter=argv[0];
 var success=true;
+var defaultOptions = { legacyRoot: false };
 
 function failErr(name, type, s1, s2, msg) {
   msg=msg||"  "+name+" "+type+" FAILED!";
@@ -36,7 +37,7 @@ function test(name, file, isJson, inputCr, outputCr) {
   var text = load(file, inputCr);
   var shouldFail = name.substr(0, 4) === "fail";
   var metaPath = path.join(rootDir, name+"_testmeta.hjson");
-  var meta = fs.existsSync(metaPath) ? Hjson.parse(fs.readFileSync(metaPath, "utf8")) : {};
+  var meta = fs.existsSync(metaPath) ? Hjson.parse(fs.readFileSync(metaPath, "utf8")) : defaultOptions;
   Hjson.setEndOfLine(outputCr?"\r\n":"\n");
 
   try {
