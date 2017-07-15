@@ -1,5 +1,5 @@
 /*!
- * Hjson v3.0.1
+ * Hjson v3.0.2
  * http://hjson.org
  *
  * Copyright 2014-2017 Christian Zangl, MIT license
@@ -504,9 +504,9 @@ module.exports = function(source, opt) {
     return text.charAt(at + offs);
   }
 
-  function string() {
+  function string(allowML) {
     // Parse a string value.
-    // callees make sure that (ch === '"' || ch === "'")
+    // callers make sure that (ch === '"' || ch === "'")
     var string = '';
 
     // When parsing for string values, we must look for "/' and \ characters.
@@ -514,7 +514,7 @@ module.exports = function(source, opt) {
     while (next()) {
       if (ch === exitCh) {
         next();
-        if (ch === "'" && string.length === 0) {
+        if (allowML && ch === "'" && string.length === 0) {
           // ''' indicates a multiline string
           next();
           return mlString();
@@ -599,7 +599,7 @@ module.exports = function(source, opt) {
     // quotes for keys are optional in Hjson
     // unless they include {}[],: or whitespace.
 
-    if (ch === '"' || ch === "'") return string();
+    if (ch === '"' || ch === "'") return string(false);
 
     var name = "", start = at, space = -1;
     for (;;) {
@@ -842,7 +842,7 @@ module.exports = function(source, opt) {
       case '{': return object();
       case '[': return array();
       case "'":
-      case '"': return string();
+      case '"': return string(true);
       default: return tfnns();
     }
   }
@@ -1005,7 +1005,7 @@ module.exports = function(data, opt) {
     '"' : '"',
     '\\': '\\'
   };
-  var needsEscapeName = /[,\{\[\}\]\s:#"]|\/\/|\/\*|'''/;
+  var needsEscapeName = /[,\{\[\}\]\s:#"']|\/\/|\/\*/;
   var gap = '';
 
   function wrap(tk, v) { return tk[0] + v + tk[1]; }
@@ -1240,11 +1240,11 @@ module.exports = function(data, opt) {
 };
 
 },{"./hjson-common":2,"./hjson-dsf":3}],6:[function(require,module,exports){
-module.exports="3.0.1";
+module.exports="3.0.2";
 
 },{}],7:[function(require,module,exports){
 /*!
- * Hjson v3.0.1
+ * Hjson v3.0.2
  * http://hjson.org
  *
  * Copyright 2014-2017 Christian Zangl, MIT license

@@ -1,7 +1,9 @@
 # hjson-js History
 
+- v3.0.2
+  - fix stringify for keys containing single quotes
 - v3.0.1
-  - add option to turn of legacy support for omitting root braces
+  - add option to turn off legacy support for omitting root braces
 - v3.0.0
   - add support for single quoted strings
 - v2.4.3
