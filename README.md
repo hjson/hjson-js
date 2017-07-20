@@ -110,6 +110,7 @@ This method produces Hjson text from a JavaScript value.
 - *options*: object
   - *keepWsc*: boolean, keep white space. See parse.
   - *bracesSameLine*: boolean, makes braces appear on the same line as the key name. Default false.
+  - *inlineSimple*: boolean, simple array-elements are comma separated on a single line. Default false.
   - *emitRootBraces*: boolean, show braces for the root object. Default true.
   - *quotes*: string, controls how strings are displayed. (setting separator implies "strings")
     - "min": no quotes whenever possible (default)
