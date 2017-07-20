@@ -75,6 +75,7 @@ Options for Hjson output:
               can be used with -rt and // comments
   -rt         round trip comments
   -nocol      disable colors
+  -cond=n     set condense option (default 60, 0 to disable)
 
 Domain specific formats are optional extensions to Hjson and can be enabled with the following options:
   +math: support for Inf/inf, -Inf/-inf, Nan/naN and -0
@@ -109,6 +110,7 @@ This method produces Hjson text from a JavaScript value.
 - *value*: any JavaScript value, usually an object or array.
 - *options*: object
   - *keepWsc*: boolean, keep white space. See parse.
+  - *condense*: integer, will try to fit objects/arrays onto one line. Default 0 (off).
   - *bracesSameLine*: boolean, makes braces appear on the same line as the key name. Default false.
   - *emitRootBraces*: boolean, show braces for the root object. Default true.
   - *quotes*: string, controls how strings are displayed. (setting separator implies "strings")

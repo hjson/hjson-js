@@ -36,6 +36,7 @@ if (args["-help"] || args["?"] || args.h) {
   console.error("              can be used with -rt and // comments");
   console.error("  -rt         round trip comments");
   console.error("  -nocol      disable colors");
+  console.error("  -cond=n     set condense option (default 60, 0 to disable)");
   console.error("");
   console.error("Domain specific formats are optional extensions to Hjson and can be enabled with the following options:");
   Object.keys(Hjson.dsf).forEach(function(name) {
@@ -81,6 +82,7 @@ function convert(text) {
     if (args.js) args.quote="all";
     if (args.quote===true) args.quote="strings";
     result = Hjson.stringify(obj, {
+      condense: args.cond || 60,
       bracesSameLine: args.sl,
       quotes: args.quote,
       separator: args.js,
