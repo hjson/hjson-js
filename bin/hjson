@@ -72,6 +72,7 @@ function convert(text) {
   catch (e) {
     console.error(e.toString());
     if (e.hint) console.error("\nhint: "+e.hint);
+    process.exit(1); // set exit code
     return;
   }
 
