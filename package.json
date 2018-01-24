@@ -3,7 +3,7 @@
   "description": "A user interface for JSON.",
   "main": "./lib/hjson.js",
   "author": "Christian Zangl",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "keywords": [
     "json",
     "comments",

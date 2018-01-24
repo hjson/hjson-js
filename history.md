@@ -1,5 +1,9 @@
 # hjson-js History
 
+- v3.1.1
+  - set exit code for cli tool
+- v3.1.0
+  - add condense mode for stringify
 - v3.0.2
   - fix stringify for keys containing single quotes
 - v3.0.1
