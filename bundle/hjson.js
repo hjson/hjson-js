@@ -10,7 +10,7 @@
  * https://github.com/douglascrockford/JSON-js (json_parse.js, json2.js)
  */
 
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Hjson = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Hjson = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 /* Hjson http://hjson.org */
 "use strict";
 
@@ -33,7 +33,7 @@ function extractComments(value, root) {
   var i, length; // loop
   var any, res;
   if (Object.prototype.toString.apply(value) === '[object Array]') {
-    res={ a: [] };
+    res={ a: {} };
     for (i=0, length=value.length; i<length; i++) {
       if (saveComment(res.a, i, comments.a[i], extractComments(value[i])))
         any=true;
@@ -153,7 +153,7 @@ function merge(comments, value, dropped, path) {
     return;
   }
 
-  var i, length; // loop
+  var i; // loop
   var setComments=common.createComment(value);
 
   if (path.length===0 && comments.r)
@@ -161,16 +161,21 @@ function merge(comments, value, dropped, path) {
 
   if (Object.prototype.toString.apply(value) === '[object Array]') {
     setComments.a=[];
-    for (i=0, length=(comments.a||[]).length; i<length; i++) {
-      var kpath=path.slice().concat([i]);
-      var c=comments.a[i];
-      if (!c) continue;
-      if (i<value.length) {
-        setComments.a.push([c.b, c.a]);
-        merge(c.x, value[i], dropped, kpath);
-      } else {
-        dropped.push(droppedComment(kpath, c));
-        dropAll(c.x, dropped, kpath);
+    var a=comments.a||{};
+    for (var key in a) {
+      if (a.hasOwnProperty(key)) {
+        i=parseInt(key);
+        var c=comments.a[key];
+        if (c) {
+          var kpath=path.slice().concat([i]);
+          if (i<value.length) {
+            setComments.a[i]=[c.b, c.a];
+            merge(c.x, value[i], dropped, kpath);
+          } else {
+            dropped.push(droppedComment(kpath, c));
+            dropAll(c.x, dropped, kpath);
+          }
+        }
       }
     }
     if (i===0 && comments.e) setComments.e=[comments.e.b, comments.e.a];
