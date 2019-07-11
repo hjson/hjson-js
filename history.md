@@ -1,5 +1,7 @@
 # hjson-js History
 
+- v3.2.0
+  - add option to serializeDeterministically
 - v3.1.1
   - set exit code for cli tool
 - v3.1.0
