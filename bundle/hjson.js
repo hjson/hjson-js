@@ -948,7 +948,7 @@ module.exports = function(data, opt) {
   var multiline = 1; // std=1, no-tabs=2, off=0
   var separator = ''; // comma separator
   var dsfDef = null;
-  var serializeDeterministically = false;
+  var sortProps = false;
   var token = plainToken;
 
   if (opt && typeof opt === 'object') {
@@ -964,7 +964,7 @@ module.exports = function(data, opt) {
     else multiline = opt.multiline == 'no-tabs' ? 2 : 1;
     separator = opt.separator === true ? token.com[0] : '';
     dsfDef = opt.dsf;
-    serializeDeterministically = opt.serializeDeterministically;
+    sortProps = opt.sortProps;
 
     // If the space parameter is a number, make an indent string containing that
     // many spaces. If it is a string, it will be used as the indent string.
@@ -1233,7 +1233,7 @@ module.exports = function(data, opt) {
             if (Object.prototype.hasOwnProperty.call(value, k) && objectKeys.indexOf(k) < 0)
               objectKeys.push(k);
           }
-          if(serializeDeterministically) {
+          if(sortProps) {
             objectKeys.sort();
           }
           var keys = commentKeys.concat(objectKeys);
@@ -1396,7 +1396,7 @@ module.exports="3.2.0";
         emitRootBraces
                     obsolete: will always emit braces
 
-        serializeDeterministically
+        sortProps
                     When serializing objects into hjson, order the keys based on
                     their UTF-16 code units order
       }
