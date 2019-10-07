@@ -1,5 +1,5 @@
 /*!
- * Hjson v3.1.2
+ * Hjson v3.2.0
  * http://hjson.org
  *
  * Copyright 2014-2017 Christian Zangl, MIT license
@@ -948,6 +948,7 @@ module.exports = function(data, opt) {
   var multiline = 1; // std=1, no-tabs=2, off=0
   var separator = ''; // comma separator
   var dsfDef = null;
+  var sortProps = false;
   var token = plainToken;
 
   if (opt && typeof opt === 'object') {
@@ -963,6 +964,7 @@ module.exports = function(data, opt) {
     else multiline = opt.multiline == 'no-tabs' ? 2 : 1;
     separator = opt.separator === true ? token.com[0] : '';
     dsfDef = opt.dsf;
+    sortProps = opt.sortProps;
 
     // If the space parameter is a number, make an indent string containing that
     // many spaces. If it is a string, it will be used as the indent string.
@@ -1225,11 +1227,16 @@ module.exports = function(data, opt) {
           }
         } else {
           // Otherwise, iterate through all of the keys in the object.
-          var keys = comments ? comments.o.slice() : [];
+          var commentKeys = comments ? comments.o.slice() : [];
+          var objectKeys = [];
           for (k in value) {
-            if (Object.prototype.hasOwnProperty.call(value, k) && keys.indexOf(k) < 0)
-              keys.push(k);
+            if (Object.prototype.hasOwnProperty.call(value, k) && objectKeys.indexOf(k) < 0)
+              objectKeys.push(k);
           }
+          if(sortProps) {
+            objectKeys.sort();
+          }
+          var keys = commentKeys.concat(objectKeys);
 
           for (i = 0, length = keys.length; i < length; i++) {
             setsep = i < length - 1;
@@ -1306,11 +1313,11 @@ module.exports = function(data, opt) {
 };
 
 },{"./hjson-common":2,"./hjson-dsf":3}],6:[function(require,module,exports){
-module.exports="3.1.2";
+module.exports="3.2.0";
 
 },{}],7:[function(require,module,exports){
 /*!
- * Hjson v3.1.2
+ * Hjson v3.2.0
  * http://hjson.org
  *
  * Copyright 2014-2017 Christian Zangl, MIT license
@@ -1388,6 +1395,10 @@ module.exports="3.1.2";
 
         emitRootBraces
                     obsolete: will always emit braces
+
+        sortProps
+                    When serializing objects into hjson, order the keys based on
+                    their UTF-16 code units order
       }
 
       This method produces Hjson text from a JavaScript value.
