@@ -1,5 +1,7 @@
 # hjson-js History
 
+- v3.2.1
+  - fix stringifying with comments
 - v3.2.0
   - add `sortProps` option to deterministically sort object properties
 - v3.1.1
