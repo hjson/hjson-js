@@ -4,9 +4,9 @@
 [![NPM version](https://img.shields.io/npm/v/hjson.svg?style=flat-square)](http://www.npmjs.com/package/hjson)
 [![License](https://img.shields.io/github/license/hjson/hjson-js.svg?style=flat-square)](https://github.com/hjson/hjson-js/blob/master/LICENSE)
 
-[Hjson](http://hjson.org), a user interface for JSON
+[Hjson](https://hjson.github.io), a user interface for JSON
 
-![Hjson Intro](http://hjson.org/hjson1.gif)
+![Hjson Intro](https://hjson.github.io/hjson1.gif)
 
 JSON is easy for humans to read and write... in theory. In practice JSON gives us plenty of opportunities to make mistakes without even realizing it.
 
@@ -31,7 +31,7 @@ Hjson is a syntax extension to JSON. It's NOT a proposal to replace JSON or to i
 }
 ```
 
-The JavaScript implementation of Hjson is based on [JSON-js](https://github.com/douglascrockford/JSON-js). For other platforms see [hjson.org](http://hjson.org).
+The JavaScript implementation of Hjson is based on [JSON-js](https://github.com/douglascrockford/JSON-js). For other platforms see [hjson.github.io](https://hjson.github.io).
 
 # Install from npm
 

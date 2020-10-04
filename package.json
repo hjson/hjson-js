@@ -25,7 +25,7 @@
     "build_min": "node node_modules/uglify-js/bin/uglifyjs bundle/hjson.js --comments=/^!/ -c -m -o bundle/hjson.min.js",
     "build": "npm run build_v1 && npm run build_v2 && npm run test && npm run lint && npm run build_bundle && npm run build_min"
   },
-  "homepage": "http://hjson.org",
+  "homepage": "https://hjson.github.io",
   "repository": {
     "type": "git",
     "url": "https://github.com/hjson/hjson-js.git"
