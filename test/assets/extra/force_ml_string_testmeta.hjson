@@ -1,0 +1,6 @@
+{ 
+  options: {
+    multiline: force
+    quotes: strings
+  }
+}
