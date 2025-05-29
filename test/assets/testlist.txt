@@ -82,6 +82,7 @@ stringify/quotes_always_test.hjson
 stringify/quotes_keys_test.hjson
 stringify/quotes_strings_ml_test.json
 stringify/quotes_strings_test.hjson
+extra/force_ml_string_test.hjson
 extra/notabs_test.json
 extra/root_test.hjson
 extra/separator_test.json

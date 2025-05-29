@@ -1,0 +1,9 @@
+{
+  unquoted_string: "an unquoted normal string"
+  ml_string:
+    '''
+    this is
+    a multiline
+    string
+    '''
+}

@@ -32,6 +32,7 @@ if (args["-help"] || args["?"] || args.h) {
   console.error("  -sl         output the opening brace on the same line");
   console.error("  -quote      quote all strings");
   console.error("  -quote=all  quote keys as well");
+  console.error("  -ml         use multiline format for multiline strings");
   console.error("  -js         output in JavaScript/JSON compatible format");
   console.error("              can be used with -rt and // comments");
   console.error("  -rt         round trip comments");
@@ -88,6 +89,7 @@ function convert(text) {
       quotes: args.quote,
       separator: args.js,
       keepWsc: args.rt,
+      multiline: args.ml ? "force" : "std",
       colors: !args.nocol && process.stdout.isTTY,
       dsf: dsf,
     });
