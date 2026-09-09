@@ -66,6 +66,7 @@ failStr7a_test.hjson
 failStr8a_test.hjson
 kan_test.hjson
 keys_test.hjson
+mlStrQuote1_test.json
 mltabs_test.json
 oa_test.hjson
 pass1_test.json

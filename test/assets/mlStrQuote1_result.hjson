@@ -1,0 +1,15 @@
+{
+  bothQuotes:
+    '''
+    'Hello,\nWorld!'
+    '''
+  startQuote:
+    '''
+    'Hello,\nWorld!
+    '''
+  endQuote:
+    '''
+    #Hello,\nWorld!'
+    '''
+  safe: Hello,\nWorld!
+}
