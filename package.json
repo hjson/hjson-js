@@ -17,7 +17,7 @@
     "hjson": "./bin/hjson"
   },
   "scripts": {
-    "test": "node ./test/test.js",
+    "test": "node ./test/test.js && node ./test/test_ml_string.js",
     "lint": "node_modules/eslint/bin/eslint.js -f unix bin/hjson lib/*.js",
     "build_v1": "node -e 'console.log(\"module.exports=\\\"\"+eval(\"(\"+process.argv[1]+\")\").version+\"\\\";\");' -- \"`cat package.json`\" > lib/hjson-version.js",
     "build_v2": "node -e 'var v=\" * Hjson v\"+eval(\"(\"+process.argv[1]+\")\").version; if (v!==process.argv[2]) throw new Error(\"ver\");' -- \"`cat package.json`\" \"`grep -E '\\* Hjson v.*$' lib/hjson.js`\"",

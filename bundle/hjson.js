@@ -1079,7 +1079,7 @@
       var i, a = string.replace(/\r/g, "").split('\n');
       gap += indent;
 
-      if (a.length === 1) {
+      if (a.length === 1 && a[0][0] !== "'" && a[0][a[0].length - 1] !== "'") {
       // The string contains only a single line. We still use the multiline
       // format as it avoids escaping the \ character (e.g. when used in a
       // regex).
