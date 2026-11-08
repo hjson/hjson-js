@@ -1010,8 +1010,9 @@
     var needsEscape = new RegExp('[\\\\\\"\x00-\x1f'+commonRange+']', 'g');
   // needsQuotes tests if the string can be written as a quoteless string (like needsEscape but without \\ and \")
     var needsQuotes = new RegExp('^\\s|^"|^\'|^#|^\\/\\*|^\\/\\/|^\\{|^\\}|^\\[|^\\]|^:|^,|\\s$|[\x00-\x1f'+commonRange+']', 'g');
-  // needsEscapeML tests if the string can be written as a multiline string (like needsEscape but without \n, \r, \\, \", \t unless multines is 'std')
-    var needsEscapeML = new RegExp('\'\'\'|^[\\s]+$|[\x00-'+(multiline === 2 ? '\x09' : '\x08')+'\x0b\x0c\x0e-\x1f'+commonRange+']', 'g');
+  // Multiline strings cannot preserve CR or leading whitespace in the one-line form.
+  // LF, backslashes, quotes and (in std mode) tabs otherwise need no escaping.
+    var needsEscapeML = new RegExp('\'\'\'|^[\\s]+$|^[ \\t][^\\n]*$|[\x00-'+(multiline === 2 ? '\x09' : '\x08')+'\x0b-\x1f'+commonRange+']', 'g');
   // starts with a keyword and optionally is followed by a comment
     var startsWithKeyword = new RegExp('^(true|false|null)\\s*((,|\\]|\\}|#|//|/\\*).*)?$');
     var meta = {
@@ -1076,7 +1077,7 @@
     function mlString(string, gap) {
     // wrap the string into the ''' (multiline) format
 
-      var i, a = string.replace(/\r/g, "").split('\n');
+      var i, a = string.split('\n');
       gap += indent;
 
       if (a.length === 1) {

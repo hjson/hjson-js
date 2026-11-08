@@ -84,6 +84,8 @@ tests.forEach(function(file) {
   test(name, file, isJson, true, true);
 });
 
+require('./test_stringify_whitespace')(Hjson);
+
 console.log(success?"ALL OK!":"FAIL!");
 process.exit(success?0:1);
 
